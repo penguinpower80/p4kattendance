@@ -1,1 +1,1 @@
-web: gunicorn tracker.wsgi --log-file -
+web: gunicorn p4k.wsgi --log-file -

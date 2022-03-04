@@ -1,3 +1,4 @@
+from datetime import datetime
 from os import path
 
 from decouple import config
@@ -18,6 +19,7 @@ def version():
                 try:
                     with open(checkfile) as reader:
                         last_deployed = path.getctime(checkfile)
+                        return datetime.fromtimestamp( last_deployed ).strftime('%m/%d/%Y %H:%M:%S')
                 except Exception as e:
                     last_deployed = '[unable to open file]'
             else:

@@ -21,3 +21,14 @@ This project will be a student attendance tracking for partnership 4 kids.
 ## Adding views, forms, or admin:
 - Create a new file in the appropriate folder. For example, homepage.py in the view folder
 - Edit the __init__.py in that folder, and add "from .[filename] import *".  (don't forget the leading dot)
+
+## Importing date (for now)
+- open `http://127.0.0.1:8000/import`
+- Select 'School File'
+- For the file, select 'p4kattendance\attendance\tests\samples\schools.csv'
+- Click import
+- (wait to finish)
+- Select 'Student file'
+- For the file, select 'p4kattendance\attendance\tests\samples\students.csv'
+- Click import
+- (wait to finish)

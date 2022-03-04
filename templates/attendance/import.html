@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Import{% endblock title %}
+
+{% block content %}
+<h2>Import</h2>
+    <hr />
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% include 'partials/bulma_form.html' with form=form %}
+        <div class="control">
+            <button class="button is-primary" type="submit">IMPORT</button>
+        </div>
+    </form>
+
+{% endblock content %}

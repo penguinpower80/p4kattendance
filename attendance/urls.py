@@ -5,4 +5,5 @@ app_name = 'attendance'
 
 urlpatterns = [
           path('', views.home, name='home'),
+          path('import', views.importfiles, name='import')
 ]

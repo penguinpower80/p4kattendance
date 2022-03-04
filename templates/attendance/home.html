@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+    {% if user.is_authenticated %}
+        {% include 'partials/frontpage.html' %}
+    {% else %}
+        <h1>Attendance Tracker</h1>
+        {% include 'partials/login.html' %}
+    {% endif %}
+{% endblock %}

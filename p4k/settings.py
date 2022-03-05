@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY', default='---')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=False)
 
 ALLOWED_HOSTS = []
 
@@ -74,6 +74,20 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'p4k.wsgi.application'
+
+EMAIL = config('EMAIL', default='LOCAL')
+
+if EMAIL == 'LOCAL':
+    EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+    EMAIL_FILE_PATH = 'emails'  # change this to a proper location
+
+if EMAIL == 'SENDGRID':
+    EMAIL_HOST = 'smtp.sendgrid.net'
+    EMAIL_HOST_USER = config("EMAIL_HOST_USER")
+    EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+    DEFAULT_FROM_EMAIL = config('FROM', default=None)
 
 
 # Database

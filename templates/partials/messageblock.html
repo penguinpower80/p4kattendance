@@ -1,0 +1,7 @@
+{% if message %}
+{% load attendancetags %}
+<div class="systemmessage notification {% status_class status %}">
+    <button class="delete"></button>
+    {{ message }}
+    </div>
+{% endif %}

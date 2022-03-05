@@ -1,0 +1,12 @@
+<article class="message" id="school-item-{{ school.id }}">
+		<div class="message-header">
+			<p><input type="checkbox" /> {{ school.name }} <a href="#school-{{ school.id }}" data-action="collapse">Collapse/Expand</a></p>
+		</div>
+		<div id="school-{{ school.id }}" class="message-body" data-parent="accordion_first">
+			<div class="message-body-content">
+                {% for cr in school.classroom_set.all %}
+                    {% include 'partials/assignment/assignment_widget_classroom.html' with classroom=cr parent="school-"|add:school.id %}
+                {% endfor %}
+			</div>
+		</div>
+	</article>

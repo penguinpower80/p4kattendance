@@ -1,0 +1,7 @@
+<div id="accordion_first">
+    {% for s in schools %}
+        {% if s.classroom_set.all.count > 0 %}
+            {% include 'partials/assignment/assignment_widget_school.html' with school=s %}
+        {% endif %}
+    {% endfor %}
+</div>

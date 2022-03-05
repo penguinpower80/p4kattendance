@@ -1,0 +1,53 @@
+{% load attendancetags %}
+<div class="section importresults">
+    <h3>Results:</h3>
+    <div class="table-container">
+        <table class="table is-bordered is-striped is-full-width is-narrow">
+            {% if type == 'school' %}
+                <head>
+                    <tr>
+                        <th>STATUS</th>
+                        <th>ID</th>
+                        <th>NAME</th>
+                        <th>TYPE</th>
+                    </tr>
+                </head>
+                <tbody>
+                {% for row in rows %}
+                    <tr {% if row.STATUS == 'ERROR' %}title="{{ row.MESSAGE }}" class="has-background-danger-light"{% endif %}>
+                        <td>{{ row.STATUS }}{% if row.STATUS == 'ERROR' %} ({{ row.MESSAGE }}){% endif %}</td>
+                        <td>{{ row.AGENCYID }}</td>
+                        <td>{{ row.NAME }}</td>
+                        <td>{{ row.TYPE }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+
+            {% endif %}
+            {% if type == 'student' %}
+                <head>
+                    <tr>
+                        <th>STATUS</th>
+                        <th>ID</th>
+                        <th>NAME</th>
+                        <th>DOB</th>
+                        <th>CLASSROOM</th>
+                        <th>SCHOOL</th>
+                    </tr>
+                </head>
+                <tbody>
+                {% for row in rows %}
+                    <tr {% if row.STATUS == 'ERROR' %}title="{{ row.MESSAGE }}" class="has-background-danger-light"{% endif %}>
+                        <td>{{ row.STATUS }}{% if row.STATUS == 'ERROR' %} ({{ row.MESSAGE }}){% endif %}</td>
+                        <td>{{row|getkey:'NDE ID'}}</td>
+                        <td>{{ row.FIRST }} {{ row.LAST }}</td>
+                        <td>{{ row.DOB }}</td>
+                        <td>{{ row.CLASSROOM }}</td>
+                        <td>{{ row|getkey:'SCHOOL ID' }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            {% endif %}
+        </table>
+    </div>
+</div>

@@ -11,5 +11,9 @@
             <button class="button is-primary" type="submit">IMPORT</button>
         </div>
     </form>
+    {% if status == 'success' and rows %}
+        {%include 'partials/sysadmin/import_table.html' with type=type rows=rows only %}
+
+    {% endif %}
 
 {% endblock content %}

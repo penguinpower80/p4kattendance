@@ -12,3 +12,13 @@ html, body {
 .skiptocontent:focus {
     transform: translateY(0%);
 }
+
+.importresults .table-container {
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.user-sysadmin.page-home a.box {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+}

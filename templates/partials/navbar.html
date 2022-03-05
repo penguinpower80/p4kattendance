@@ -9,7 +9,13 @@
     </div>
     <div id="attendancemainnav" class="navbar-menu">
         <div class="navbar-end">
+            <a class="navbar-item" href="{% url 'attendance:home' %}">Home</a>
             {% if user.is_authenticated %}
+                {% if user.is_superuser %}
+                    <a class="navbar-item" href="{% url 'attendance:import' %}">Import</a>
+                {% endif %}
+
+
                 <a class="navbar-item logout-button" href="{% url 'logout' %}">Log Out</a>
             {% else %}
                 <a class="navbar-item" href="{% url 'login' %}">Log In</a>

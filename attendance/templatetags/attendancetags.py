@@ -14,7 +14,7 @@ def version():
     last_deployed = ''
     try:
         this_host = config('HOSTING', default='LOCAL')
-        if this_host == 'heroku':
+        if this_host == 'HEROKU':
             checkfile = path.join(settings.BASE_DIR, 'manage.py')
             if path.exists(checkfile):
                 try:

@@ -11,10 +11,14 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 import os
 from pathlib import Path
+from decouple import config
+
+HOSTING = config('HOSTING', default='LOCAL')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-import django_heroku
-from decouple import config
+if HOSTING == 'HEROKU':
+    import django_heroku
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -167,6 +171,5 @@ if AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY and AWS_STORAGE_BUCKET_NAME:
 else:
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
-HOSTING = config('HOSTING', default='LOCAL')
 if HOSTING == 'HEROKU':
     django_heroku.settings(locals())

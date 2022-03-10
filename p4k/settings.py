@@ -13,7 +13,7 @@ import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-import django_heroku
+#import django_heroku
 from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -168,5 +168,5 @@ else:
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 HOSTING = config('HOSTING', default='LOCAL')
-if HOSTING == 'HEROKU':
-    django_heroku.settings(locals())
+# if HOSTING == 'HEROKU':
+#     django_heroku.settings(locals())

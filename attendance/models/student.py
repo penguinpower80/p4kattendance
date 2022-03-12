@@ -15,7 +15,7 @@ class Student(models.Model):
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
     dob = models.DateField(null=True, blank=True)
     gender = models.TextField(max_length=1, choices=Gender.choices, default='', blank=True, null=True)
-    street = models.CharField(max_length11=200, null=True, blank=True)
+    street = models.CharField(max_length=200, null=True, blank=True)
     city = models.CharField(max_length=50, null=True, blank=True)
     state = models.CharField(max_length=2, null=True, blank=True)
     zip = models.CharField(max_length=20, null=True, blank=True)

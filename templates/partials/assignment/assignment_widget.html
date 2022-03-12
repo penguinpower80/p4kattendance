@@ -1,5 +1,9 @@
-<div id="accordion_first">
-    {% for s in schools %}
+<div id="assignment_accordion" class="p4kaccordian">
+    {% if assignable.mentors.count > 0 %}
+            {% include 'partials/assignment/assignment_widget_mentor.html' with mentors=assignable.mentors %}
+    {% endif %}
+
+    {% for s in assignable.schools %}
         {% if s.classroom_set.all.count > 0 %}
             {% include 'partials/assignment/assignment_widget_school.html' with school=s %}
         {% endif %}

@@ -1,0 +1,10 @@
+<div class="column is-one-quarter-desktop">
+    <h2>{{ title }}</h2>
+    <div class="box assignmentselectorbox">
+        {% for user in user_list %}
+            <a href="{% url 'attendance:assign' user.id %}" class="button is-large is-fullwidth is-outlined is-primary mt-3 mb-3">
+                {{ user.get_full_name }}
+            </a>
+        {% endfor %}
+    </div>
+</div>

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+    <form method="post" enctype="multipart/form-data">
+    <div class="columns">
+        <div class="column is-four-fifths-desktop">
+            <h2>{% if is_facilitator %}Facilitator {% endif %}{% if is_mentor %}Mentor {% endif %}Assignment - <em>{{ targetuser.get_full_name }}</em></h2>
+        </div>
+        <div class="column has-text-right-desktop">
+    <button class="button is-primary">SAVE</button>
+        </div>
+    </div>
+        {% csrf_token %}
+            <input type="hidden" name="target_user" value="{{ targetuser.id }}" />
+            {% include 'partials/assignment/assignment_widget.html' %}
+       </form>
+{% endblock %}

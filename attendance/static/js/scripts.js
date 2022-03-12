@@ -27,7 +27,6 @@ function removeMessage() {
 
 
 jQuery(document).ready(function ($) {
-    bulmaCollapsible.attach();
 
     // show a welcome messag eon home page - probably remove at some point
     if ($('.home').length) {

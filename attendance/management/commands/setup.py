@@ -2,9 +2,12 @@ import os
 from io import TextIOWrapper
 
 from decouple import config
+from django.contrib.auth.models import Group, Permission
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
+from django.contrib.contenttypes.models import ContentType
+
 
 from attendance.utility import handle_uploaded_file
 
@@ -92,5 +95,28 @@ class Command(BaseCommand):
         else:
             self.stdout.write('Creating superuser')
             call_command("createsuperuser")
+
+
+        if not newdb:
+            should_continue = input('Do you want to create groups? [y/N]?')
+        else:
+            should_continue = 'y' #it was a new db, so force this!
+
+        if should_continue:
+            self.stdout.write('Adding mentors group...')
+            Group.objects.get_or_create(name='Mentors')
+
+            self.stdout.write('Adding facilitators group...')
+            Group.objects.get_or_create(name='Facilitators')
+
+            self.stdout.write('Done')
+
+        should_continue = input('Do you want to create mentor users? [y/N]?')
+        if should_continue.lower() == 'y':
+            call_command("create-mentors")
+
+        should_continue = input('Do you want to create facilitator users? [y/N]?')
+        if should_continue.lower() == 'y':
+            call_command("create-facilitators")
 
         self.stdout.write('Setup complete.')

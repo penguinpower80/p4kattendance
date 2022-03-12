@@ -6,6 +6,8 @@ from decouple import config
 from django import template
 from django.conf import settings
 
+from attendance.utility import isAssigned
+
 register = template.Library()
 
 
@@ -34,7 +36,6 @@ def version():
 @register.simple_tag(takes_context=True)
 def current_view_class(context):
     classes = []
-    logging.warning(context.request.user)
     if context.request.user.is_anonymous:
         classes.append("user-anonymous")
     if context.request.user.is_superuser:
@@ -62,3 +63,10 @@ Get a value from a dictionary with key that has a space
 @register.filter(name='getkey')
 def getkey(value, arg):
     return value[arg]
+
+@register.simple_tag()
+def isassigned(type, id, assignments, text="None"):
+    if assignments.filter(type=type, tid=id).count() > 0:
+        return text
+    else:
+        return ""

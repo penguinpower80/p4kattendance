@@ -1,0 +1,19 @@
+{% load attendancetags %}
+<article class="message">
+    <div class="message-header">
+        <h4 class="p-0 m-0 has-text-white">Mentors</h4>
+        <a href="#mentors" data-action="collapse">Collapse/Expand</a>
+
+    </div>
+    <div class="message-body collapsed">
+        <div class="message-body-content">
+            {% for m in mentors %}
+                <div class="m-3">
+                    <label>
+                        <input type="checkbox" value="{{ m.id }}" name="mentor[]" {% isassigned 'M' m.id assignments "checked" %}> {{ m.get_full_name }}
+                    </label>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</article>

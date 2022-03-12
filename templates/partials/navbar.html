@@ -9,10 +9,17 @@
     </div>
     <div id="attendancemainnav" class="navbar-menu">
         <div class="navbar-end">
-            <a class="navbar-item" href="{% url 'attendance:home' %}">Home</a>
+        <div class="navbar-item">
+            <a class="{% if request.resolver_match.url_name == "home" %}button is-outlined{% endif %}" href="{% url 'attendance:home' %}">Home</a>
+        </div>
             {% if user.is_authenticated %}
                 {% if user.is_superuser %}
-                    <a class="navbar-item" href="{% url 'attendance:import' %}">Import</a>
+                    <div class="navbar-item">
+                    <a class="{% if request.resolver_match.url_name == "import" %}button is-outlined{% endif %}" href="{% url 'attendance:import' %}">Import</a>
+                    </div>
+                    <div class="navbar-item">
+                    <a class="{% if request.resolver_match.url_name == "assignments" %}button is-outlined{% endif %}" href="{% url 'attendance:assignments' %}">Assignments</a>
+                    </div>
                 {% endif %}
 
 

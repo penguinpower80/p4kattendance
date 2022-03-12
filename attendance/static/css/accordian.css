@@ -1,0 +1,9 @@
+.p4kaccordian {
+
+}
+
+.p4kaccordian .collapsed {
+    overflow:hidden;
+    height: 0;
+    padding: 0;
+}

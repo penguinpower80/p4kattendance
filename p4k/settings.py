@@ -171,5 +171,8 @@ if AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY and AWS_STORAGE_BUCKET_NAME:
 else:
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
+LOGIN_REDIRECT_URL = '/'
+
+
 if HOSTING == 'HEROKU':
     django_heroku.settings(locals())

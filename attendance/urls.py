@@ -6,5 +6,6 @@ app_name = 'attendance'
 urlpatterns = [
           path('', views.home, name='home'),
           path('import', views.importfiles, name='import'),
-          path('widgettest', views.assigntest, name='assigntest')
+          path('assignments', views.assignments, name='assignments'),
+          path('assignments/<int:userid>', views.assign, name='assign')
 ]

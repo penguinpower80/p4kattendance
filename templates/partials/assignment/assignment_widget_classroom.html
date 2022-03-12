@@ -1,12 +1,22 @@
+{% load attendancetags %}
 <article class="message" id="classroom-item-{{ classroom.id }}">
-		<div class="message-header">
-			<p><input type="checkbox" /> {{ classroom.name }} <a href="#classroom-{{ classroom.id }}" data-action="collapse">Collapse/Expand</a></p>
-		</div>
-		<div id="classroom-{{ classroom.id }}" class="message-body" data-parent="{{ parent }}">
-			<div class="message-body-content">
-                {% for student in classroom.student_set.all %}
-                    {% include 'partials/assignment/assignment_widget_student.html' with student=student parent="classroom-"|add:classroom.id %}
-                {% endfor %}
-			</div>
-		</div>
-	</article>
+    <div class="message-header">
+        <label>
+                <input class="classroomcheckbox" type="checkbox" name="classroom[]" value="{{ classroom.id }}" {% isassigned 'C' classroom.id assignments "checked" %} />
+            {{ classroom.name }}
+            </label>
+            <a href="#classroom-{{ classroom.id }}" data-action="collapse">Collapse/Expand</a>
+    </div>
+    <div id="classroom-{{ classroom.id }}" class="message-body collapsed">
+        <div class="message-body-content">
+            {% for student in classroom.student_set.all %}
+                <div>
+                <label class="checkbox">
+                    <input class="studentcheckbox" type="checkbox" name="student[]" value="{{ student.nde_id }}" {% isassigned 'P' student.nde_id assignments "checked" %}/>
+                    {{ student.first_name }} {{ student.last_name }}
+                </label>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</article>

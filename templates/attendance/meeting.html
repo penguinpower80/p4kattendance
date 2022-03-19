@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Meeting{% endblock %}
+{% block content %}
+    <div class="columns">
+        <div class="column">
+            <h2>Meeting - {{ classroom.name }}</h2>
+            <div class="is-size-6 has-text-info">({{ classroom.school.name }})</div>
+        </div>
+        <div class="column">
+            <div class="has-text-right has-text-link">
+            {{ date|date:"M d, Y" }}
+                </div>
+        </div>
+    </div>
+
+
+    {% for student in students %}
+        {% include 'partials/user/student_attendance_row.html' with student=student only %}
+    {% endfor %}
+{% endblock %}
+
+{{ schools }}

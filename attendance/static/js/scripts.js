@@ -47,4 +47,15 @@ jQuery(document).ready(function ($) {
             removeMessage()
         }, 5000)
     }
+
+    $(document).on('click', '.studentattendancerow button', function(){
+        $parent = $(this).closest('.studentattendancerow');
+        if ( $(this).hasClass('is-primary') ) {
+            $(this).removeClass('is-primary');
+        } else {
+            $parent.find('button').removeClass('is-primary');
+            $(this).addClass('is-primary')
+        }
+    })
+
 })

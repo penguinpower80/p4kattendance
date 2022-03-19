@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 {% block title %}Home{% endblock %}
 {% block content %}
-    {% if user.is_authenticated %}
-        {% include 'partials/frontpage.html' %}
+    {% if user.is_superuser %}
+        <h1>Welcome {{ user.full_name}}</h1>
+        {% include 'partials/sysadmin/home.html' %}
     {% else %}
-        <h1>Attendance Tracker</h1>
-        {% include 'partials/login.html' %}
+        <div class="p4kaccordian">
+        {% include 'partials/user/assignmentlist.html' %}
+        </div>
     {% endif %}
 {% endblock %}

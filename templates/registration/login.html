@@ -3,14 +3,22 @@
 {% block title %}Log In{% endblock %}
 {% block content %}
 
-
-    <h2>Log In</h2>
-    <form method="post">
-        {% csrf_token %}
-
-        {% include 'partials/bulma_form.html' with form=form %}
-        <div class="control">
-            <button class="button is-link" type="submit">Log In</button>
+<div class="container p-20">
+    <div class="columns is-mobile is-centered">
+        <div class="column is-four-fifths-mobile is-two-thirds-tablet is-two-fifths-desktop is-two-fifths-widescreen is-two-fifths-fullhd">
+            <form method="post">
+                <h2 class="title is-2 has-text-centered p-5">Log In</h2>
+                <div class="control">
+                    {% csrf_token %}
+                    {% include 'partials/bulma_form.html' with form=form %}
+                </div>
+                <div class="control mt-5">
+                    <button class="button is-link is-fullwidth" type="submit">Log In</button>
+                </div>
+                <p class="has-text-grey has-text-centered p-5"><a class="has-text-grey" href="{% url 'password_reset' %}">Forgot password?</a></p>
+            </form>
         </div>
-    </form>
+    </div>
+</div>
+
 {% endblock %}

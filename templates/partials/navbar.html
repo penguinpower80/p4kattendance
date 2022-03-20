@@ -23,6 +23,7 @@
                 {% endif %}
 
 
+                <a class="navbar-item" href="{% url 'password_change' %}">Change Password</a>
                 <a class="navbar-item logout-button" href="{% url 'logout' %}">Log Out</a>
             {% else %}
                 <a class="navbar-item" href="{% url 'login' %}">Log In</a>

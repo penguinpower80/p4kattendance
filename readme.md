@@ -10,7 +10,7 @@ This project will be a student attendance tracking for partnership 4 kids.
   
 ### Initial Setup
 *YOU CAN ALSO RUN THIS TO START OVER!!*
-- First, run `python manage setup` 
+- First, run `python manage.py setup` 
   - This will:
     1. Prompt to erase sqlite db 
     2. Prompt to erase any migrations, and make/apply the migrations fresh

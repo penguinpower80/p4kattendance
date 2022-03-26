@@ -40,6 +40,7 @@ def handle_uploaded_file(type, file):
         result['message'] = 'The school file was imported succesfully'
         return result
     if type == FileType.STUDENT:
+        RowErrors = 0
         for row in reader:
             try:
                 classroom = Classroom.objects.filter(school_id__exact=row['SCHOOL ID'], name__exact=row['CLASSROOM'] ).get()
@@ -50,6 +51,7 @@ def handle_uploaded_file(type, file):
                 try:
                     classroom.save()
                 except IntegrityError:
+                    RowErrors += 1
                     row['STATUS'] = 'ERROR'
                     row['MESSAGE'] = 'NO SCHOOL LOADED'
                     result['rows'].append(row)
@@ -97,7 +99,11 @@ def handle_uploaded_file(type, file):
                 result['message'] = 'Invalid student file. Please check your format and try again.'
                 return result
         result['status'] = 'success'
-        result['message'] = 'The student file was imported succesfully'
+        if RowErrors == 0:
+            result['message'] = 'The student file was imported succesfully'
+        else:
+            result['message'] = 'The student file was imported succesfully, but there was an error with {0} row(s).'.format(RowErrors)
+            result['status'] = 'warning'
         return result
     result['status'] = 'error'
     result['message'] = 'Unknown file type'

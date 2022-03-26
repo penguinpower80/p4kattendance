@@ -54,6 +54,8 @@ def status_class( status ):
         return 'is-danger'
     if status == 'success':
         return 'is-success'
+    if status == 'warning':
+        return 'is-warning'
     return 'is-info'
 
 '''

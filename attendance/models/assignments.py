@@ -4,7 +4,7 @@ from django.db import models
 class AssignmentTypes(models.TextChoices):
     MENTOR = 'M', 'Mentor'
     SCHOOL = 'S', 'School'
-    CLA1SSROOM = 'C', 'Classroom'
+    CLASSROOM = 'C', 'Classroom'
     STUDENT = 'P', 'Student'
 
 class Assignments(models.Model):

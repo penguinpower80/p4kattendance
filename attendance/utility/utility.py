@@ -1,3 +1,4 @@
+import logging
 from collections import OrderedDict
 
 from django.shortcuts import redirect
@@ -128,3 +129,27 @@ def getRedirectWithParam(message, location='attendance:home'):
     base_url = reverse(location)
     url = '{}?msg={}'.format(base_url, message)
     return redirect(url)
+
+'''
+Returns true if there is an entry in assignments linking this user with this student (either directly or through a class room or school)
+'''
+def userAssignedToStudent(user, student_id):
+
+    # was there a direct assignement?
+    if Assignments.objects.filter(user=user).count() > 0:
+        return True
+
+    # let's see if they are assigned via a classroom
+    try:
+        student = Student.objects.get(pk=student_id)
+    except Student.DoesNotExist:
+        return False
+
+    if Assignments.objects.filter(user=user).filter(type=AssignmentTypes.CLASSROOM).filter(tid=student.classroom_id).count() > 0:
+        return True
+
+    # let's see about through a school
+    if Assignments.objects.filter(user=user).filter(type=AssignmentTypes.SCHOOL).filter(tid=student.classroom.school_id).count() > 0:
+        return True
+    # nope
+    return False

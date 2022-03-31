@@ -9,5 +9,6 @@ urlpatterns = [
           path('assignments', views.assignments, name='assignments'),
           path('assignments/<int:userid>', views.assign, name='assign'),
           path('meeting/<str:type>/<str:id>', views.meeting, name='meeting'),
-          path('meeting/edit/<str:id>', views.editmeeting, name='editmeeting')
+          path('meeting/<int:id>', views.editmeeting, name='editmeeting'),
+          path('ajax/markattendance/<int:meeting_id>/<str:student_id>', views.markattendance, name='markattendance')
 ]

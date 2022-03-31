@@ -8,14 +8,14 @@
         </div>
         <div class="column">
             <div class="has-text-right has-text-link">
-            {{ date|date:"M d, Y" }}
+            {{ meeting.date|date:"M d, Y" }}
                 </div>
         </div>
     </div>
 
 
     {% for student in students %}
-        {% include 'partials/user/student_attendance_row.html' with student=student only %}
+        {% include 'partials/user/student_attendance_row.html' with meetingid=meeting.id student=student attendance=attendance only %}
     {% endfor %}
 {% endblock %}
 

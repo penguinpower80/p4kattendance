@@ -1,10 +1,10 @@
 const Toast = Swal.mixin({
     toast: true,
-    position: 'top-end',
+    position: 'bottom-end',
     showConfirmButton: false,
     showCloseButton: true,
-    timer: 2000,
-    timerProgressBar: true,
+    timer: 1000,
+    timerProgressBar: false,
     didOpen: (toast) => {
         //toast.addEventListener('mouseenter', Swal.stopTimer)
         //toast.addEventListener('mouseleave', Swal.resumeTimer)
@@ -23,6 +23,28 @@ function removeMessage() {
     $('.systemmessage').slideUp(350, function () {
         $(this).remove();
     })
+}
+
+function markStudentAttendance(meeting, student, status, callback) {
+    jQuery.post('/ajax/markattendance/' + meeting + '/' + student, {
+            status: status,
+            csrfmiddlewaretoken: csrftoken
+        }, function (data) {
+            msg('Attendance marked!')
+            if ( callback ) callback(data)
+
+        }).always(function () {
+        }).fail(function (d) {
+            if (d.status == 401) {
+                msg('You are not assigned to this user.', 'error')
+            }
+            else {
+                msg('There was an error marking attendance.', 'error')
+            }
+
+
+
+        })
 }
 
 
@@ -62,13 +84,36 @@ jQuery(document).ready(function ($) {
         }, 5000)
     }
 
-    $(document).on('click', '.studentattendancerow button', function () {
+    $(document).on('click', '.studentattendancerow button', function (e) {
+
         $parent = $(this).closest('.studentattendancerow');
-        if ($(this).hasClass('is-primary')) {
-            $(this).removeClass('is-primary');
+
+        let $button = $(this)
+        let student_id = $button.data('rel')
+        let status = $button.data('status')
+        let meeting_id = $button.data('meeting')
+
+        if ($(this).is('is-primary is-warning is-danger')) {
+            markStudentAttendance(meeting_id, student_id, 'remove', function(d){
+                $button.removeClass('is-primary is-warning is-danger');
+                e.preventDefault()
+            })
+
         } else {
-            $parent.find('button').removeClass('is-primary');
-            $(this).addClass('is-primary')
+            let $button = $(this)
+            let student_id = $(this).data('rel')
+            let status = $(this).data('status')
+            let meeting_id = $(this).data('meeting')
+            markStudentAttendance(meeting_id, student_id, status, function(d){
+                $parent.find('button').removeClass('is-primary is-warning is-danger');
+                if ( status == 'p' )
+                    $button.addClass('is-primary')
+                else if( status=='a')
+                    $button.addClass('is-danger')
+                else if( status=='t')
+                    $button.addClass('is-warning')
+            })
+            e.preventDefault()
         }
     })
 

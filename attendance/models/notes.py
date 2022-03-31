@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 
 
 class Notes(models.Model):
-    note_id = models.CharField(max_length=15, primary_key=True)
     note_type = models.CharField(max_length=20, null=True, blank=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     note_text = models.TextField(max_length=500, null=True, blank=True)

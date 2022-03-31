@@ -1,22 +1,21 @@
+{% load attendancetags %}
 <div class="studentattendancerow box">
     <h3>{{ student }}</h3>
     <div class="field has-addons">
-        <!--
         <p class="control">
-            <button class="button" data-rel="{{ student.nde_id }}" data-status="p">
+            <button class="button{% has_attendance_of attendance student.nde_id 'p' %}" data-rel="{{ student.nde_id }}" data-status="p" data-meeting="{{ meetingid }}">
                 <span>Present</span>
             </button>
         </p>
         <p class="control">
-            <button class="button" data-rel="{{ student.nde_id }}" data-status="a">
+            <button class="button{% has_attendance_of attendance student.nde_id 'a' ' is-danger'  %}" data-rel="{{ student.nde_id }}" data-status="a" data-meeting="{{ meetingid }}">
                 <span>Absent</span>
             </button>
         </p>
         <p class="control">
-            <button class="button" data-rel="{{ student.nde_id }}" data-status="t">
+            <button class="button{% has_attendance_of attendance student.nde_id 't' ' is-warning' %}" data-rel="{{ student.nde_id }}" data-status="t" data-meeting="{{ meetingid }}">
                 <span>Tardy</span>
             </button>
         </p>
-        -->
     </div>
 </div>

@@ -72,3 +72,13 @@ def isassigned(type, id, assignments, text="None"):
         return text
     else:
         return ""
+
+@register.simple_tag()
+def has_attendance_of(set, student, type, text=' is-primary'):
+    print(set)
+    print(student)
+    result = set.filter(student_id=student)
+    if result.count() > 0:
+        if result[0].status == type:
+            return text
+    return ''

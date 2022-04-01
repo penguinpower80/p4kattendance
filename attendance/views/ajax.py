@@ -1,3 +1,4 @@
+import datetime
 import logging
 
 from django.contrib.auth.decorators import login_required
@@ -53,3 +54,15 @@ def meetinglist(request, entity, entity_id):
         return JsonResponse({})
     return JsonResponse( meetings, safe=False)
 
+def setmeetingdate(request, meeting_id):
+    meeting = get_object_or_404(Meeting, pk=meeting_id)
+    timestamp = request.POST.get("timestamp", None)
+
+    if timestamp is not None:
+        print(timestamp)
+        newdate = datetime.datetime.strptime(timestamp, '%m/%d/%Y')
+        meeting.date = newdate
+        meeting.save()
+        return HttpResponse(meeting.date.strftime('%m/%d/%Y'), status=200)
+
+    return HttpResponse(status=500)

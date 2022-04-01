@@ -6,10 +6,8 @@
             <h2>Meeting - {{ classroom.name }}</h2>
             <div class="is-size-6 has-text-info">({{ classroom.school.name }})</div>
         </div>
-        <div class="column">
-            <div class="has-text-right has-text-link">
-            {{ meeting.date|date:"M d, Y" }}
-                </div>
+        <div class="column is-one-quarter-desktop">
+            <input data-meeting="{{ meeting.id }}" readonly type="date" value="{{ meeting.date|date:"Y-m-d" }}" name="meeting_date" id="meeting_date"/>
         </div>
     </div>
 

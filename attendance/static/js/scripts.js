@@ -25,6 +25,25 @@ function removeMessage() {
     })
 }
 
+function setMeetingDate(meeting, timestamp, callback){
+        jQuery.post('/ajax/setmeetingdate/' + meeting, {
+            timestamp: timestamp,
+            csrfmiddlewaretoken: csrftoken
+        }, function (data) {
+            msg('Date set to ' + data)
+            if ( callback ) callback(data)
+        }).always(function () {
+        }).fail(function (d) {
+            if (d.status == 401) {
+                msg('You are not allowed to do this.', 'error')
+            }
+            else {
+                msg('There was an error setting the meeting date.', 'error')
+            }
+        })
+}
+
+
 function markStudentAttendance(meeting, student, status, callback) {
     jQuery.post('/ajax/markattendance/' + meeting + '/' + student, {
             status: status,
@@ -32,7 +51,6 @@ function markStudentAttendance(meeting, student, status, callback) {
         }, function (data) {
             msg('Attendance marked!')
             if ( callback ) callback(data)
-
         }).always(function () {
         }).fail(function (d) {
             if (d.status == 401) {
@@ -41,9 +59,6 @@ function markStudentAttendance(meeting, student, status, callback) {
             else {
                 msg('There was an error marking attendance.', 'error')
             }
-
-
-
         })
 }
 
@@ -75,6 +90,24 @@ jQuery(document).ready(function ($) {
         $(".navbar-menu").toggleClass("is-active");
 
     });
+
+    // Initialize all input of type date
+    var options = {
+        showClearButton: false,
+        displayMode: 'dialog',
+
+    }
+    var calendars = bulmaCalendar.attach('[type="date"]', options);
+
+    calendars[ 0 ].on('select', date => {
+        let meeting_id = date.data.element.dataset['meeting']
+        setMeetingDate(meeting_id, date.data.value(), function(d){
+
+
+        } )
+
+
+	});
 
     // show a welcome messag eon home page - probably remove at some point
     if ($('.home').length) {

@@ -32,3 +32,9 @@ This project will be a student attendance tracking for partnership 4 kids.
 - For the file, select 'p4kattendance\attendance\tests\samples\students.csv'
 - Click import
 - (wait to finish)
+
+
+## Resources
+
+- Date Picker:
+  - https://bulma-calendar.onrender.com/

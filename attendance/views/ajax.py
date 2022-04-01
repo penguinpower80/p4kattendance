@@ -1,12 +1,14 @@
 import logging
 
-from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
 
-from attendance.models import Student, Meeting, Attendance
-from attendance.utility import userAssignedToStudent
+from attendance.models import Student, Meeting, Attendance, Classroom, AssignmentTypes
+from attendance.utility import userAssignedToStudent, meetingsFor
 
 
+@login_required
 def markattendance(request, student_id, meeting_id):
     if not userAssignedToStudent(request.user, student_id):
         return HttpResponse(status=401)
@@ -37,3 +39,16 @@ def markattendance(request, student_id, meeting_id):
         )
 
     return HttpResponse(status=200)
+
+@login_required
+def meetinglist(request, entity, entity_id):
+    if entity == AssignmentTypes.CLASSROOM:
+        classroom = get_object_or_404(Classroom, pk=entity_id)
+    if entity == AssignmentTypes.STUDENT:
+        student = get_object_or_404(Student, pk=entity_id)
+        classroom = student.classroom
+
+    meetings = meetingsFor(request.user, entity, entity_id)
+    my_list = list( meetings.values('date', 'id', 'tid', 'type') )
+    return JsonResponse( my_list, safe=False)
+

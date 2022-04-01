@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.core import serializers
 from django.db import models
 
 from attendance.models import AssignmentTypes

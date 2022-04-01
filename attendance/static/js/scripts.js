@@ -47,6 +47,24 @@ function markStudentAttendance(meeting, student, status, callback) {
         })
 }
 
+function getMeetingList(type, id, callback) {
+    jQuery.get('/ajax/meetinglist/' + type + '/' + id, function (data) {
+            if ( callback ) callback(data)
+
+        }).always(function () {
+        }).fail(function (d) {
+            if (d.status == 401) {
+                msg('You are not assigned to this user.', 'error')
+            }
+            else {
+                msg('There was an error retrieving meeting list.', 'error')
+            }
+
+
+
+        })
+}
+
 
 jQuery(document).ready(function ($) {
     /* https://bulma.io/documentation/components/navbar/ */

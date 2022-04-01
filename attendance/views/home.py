@@ -1,7 +1,9 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
-from attendance.utility import assignmentsFor
+from attendance.models import Meeting
+from attendance.utility import assignmentsFor, meetingsFor
+
 
 @login_required
 def home(request):

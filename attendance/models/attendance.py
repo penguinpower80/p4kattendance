@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.core import serializers
 from django.db import models
 
 from attendance.models import Student, Meeting
@@ -16,3 +17,4 @@ class Attendance(models.Model):
 
     def __str__(self):
         return f'{self.meeting.date} - {self.student.nde_id} - {self.get_status_display()}'
+

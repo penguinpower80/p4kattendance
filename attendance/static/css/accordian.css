@@ -2,6 +2,11 @@
 
 }
 
+.meetinglistholder {
+    max-height: 150px;
+    overflow: auto;
+}
+
 .p4kaccordian .collapsed {
     overflow:hidden;
     height: 0;

@@ -19,21 +19,25 @@
                             <label>
                                 {{ classroom.name }}
                             </label>
-                            <a href="#classroom-{{ ckey }}" data-action="collapse">Collapse/Expand</a>
+                            <a href="#classroom-{{ ckey }}" data-action="collapse" data-type="C" data-id="{{ ckey }}">Collapse/Expand</a>
                         </div>
                         <div id="classroom-{{ ckey }}" class="message-body collapsed">
                             <div class="message-body-content">
                                 {% if classroom.assigned %}
+                                    <div class="meetinglistholder">
                                     <ul class="meetinglist">
-                                        <li><a class="button is-outlined is-primary" href="{% url "attendance:meeting" 'classroom' ckey %}">NEW MEETING</a></li>
+                                        <li><a class="button is-primary is-fullwidth" href="{% url "attendance:meeting" 'classroom' ckey %}">NEW MEETING</a></li>
                                     </ul>
+                                    </div>
                                 {% endif %}
                                 {% for student in classroom.students %}
                                     <div class="">
                                         <strong>{{ student.first_name }} {{ student.last_name }}</strong>
+                                        <div class="meetinglistholder">
                                         <ul class="meetinglist">
-                                            <li><a class="button is-outlined is-primary" href="{% url "attendance:meeting" 'student' student.nde_id %}">NEW MEETING</a></li>
+                                            <li><a class="button is-primary is-fullwidth" href="{% url "attendance:meeting" 'student' student.nde_id %}">NEW MEETING</a></li>
                                         </ul>
+                                        </div>
 
 
                                     </div>

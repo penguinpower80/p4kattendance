@@ -1,20 +1,24 @@
 import logging
 from collections import OrderedDict
 
+from django.db.models import Q
 from django.shortcuts import redirect
 from django.urls import reverse
 
-from attendance.models import Assignments, AssignmentTypes, School, Student, Classroom
+from attendance.models import Assignments, AssignmentTypes, School, Student, Classroom, Meeting
 
 
 def is_mentor(user):
     return user.groups.filter(name='Mentors').exists()
 
+
 def is_facilitator(user):
     return user.groups.filter(name='Facilitators').exists()
 
+
 def isAssigned(user, id, type):
     return Assignments.objects.filter(user=user).filter(tid=id).filter(type=type).count() > 0
+
 
 '''
 Build the widget hierarchy for a given set of assignments
@@ -24,7 +28,9 @@ School
 For any given classroom, we need a school
 For any given student, we need a classroom and a school
 '''
-def buildAssignmentHierarchy( query_set ):
+
+
+def buildAssignmentHierarchy(query_set):
     hierarchy = {}
     needed_schools = []
     needed_students = []
@@ -41,27 +47,27 @@ def buildAssignmentHierarchy( query_set ):
         student_collection = Student.objects.filter(pk__in=needed_students)
         for student in student_collection:
             if student.classroom.school_id not in hierarchy:
-                hierarchy[ student.classroom.school_id ] = {
-                     'name': student.classroom.school.name,
-                     'classrooms': {
-                         student.classroom.id : {
-                             'name': student.classroom.name,
-                             'students': [
-                                 student
-                             ]
-                         }
-                     }
+                hierarchy[student.classroom.school_id] = {
+                    'name': student.classroom.school.name,
+                    'classrooms': {
+                        student.classroom.id: {
+                            'name': student.classroom.name,
+                            'students': [
+                                student
+                            ]
+                        }
+                    }
                 }
-            else: #ok, so school exists
+            else:  # ok, so school exists
                 # does the classroom exist, if yes:
-                if student.classroom.id not in hierarchy[ student.classroom.school_id ]['classrooms']:
-                    hierarchy[student.classroom.school_id]['classrooms'][ student.classroom.id ] = {
+                if student.classroom.id not in hierarchy[student.classroom.school_id]['classrooms']:
+                    hierarchy[student.classroom.school_id]['classrooms'][student.classroom.id] = {
                         'name': student.classroom.name,
                         'students': [
                             student
                         ]
                     }
-                else: # school and classroom exist, so just add the student
+                else:  # school and classroom exist, so just add the student
                     hierarchy[student.classroom.school_id]['classrooms'][student.classroom.id]['students'].append(student)
 
     # For each of the needed classrooms, make sure the "assigned" attribute is True, even if added for a student
@@ -69,19 +75,19 @@ def buildAssignmentHierarchy( query_set ):
         classroom_collection = Classroom.objects.filter(pk__in=needed_classrooms)
         for classroom in classroom_collection:
             if classroom.school_id not in hierarchy:
-                hierarchy[ classroom.school_id ] = {
-                     'name': classroom.school.name,
-                     'classrooms': {
-                         classroom.id : {
-                             'name': classroom.name,
-                             'assigned': True
-                         }
-                     }
+                hierarchy[classroom.school_id] = {
+                    'name': classroom.school.name,
+                    'classrooms': {
+                        classroom.id: {
+                            'name': classroom.name,
+                            'assigned': True
+                        }
+                    }
                 }
-            else: #ok, so school exists
+            else:  # ok, so school exists
                 # does the classroom exist, if yes:
-                if classroom.id not in hierarchy[ classroom.school_id ]['classrooms']:
-                    hierarchy[classroom.school_id]['classrooms'][ classroom.id ] = {
+                if classroom.id not in hierarchy[classroom.school_id]['classrooms']:
+                    hierarchy[classroom.school_id]['classrooms'][classroom.id] = {
                         'name': classroom.name,
                         'assigned': True
                     }
@@ -93,7 +99,7 @@ def buildAssignmentHierarchy( query_set ):
     if len(needed_schools) > 0:
         school_collection = School.objects.filter(pk__in=needed_schools)
         for school in school_collection:
-            #if school hasn't been added previously
+            # if school hasn't been added previously
             if school.id not in hierarchy:
                 hierarchy[school.id] = {
                     'name': school.name,
@@ -106,7 +112,7 @@ def buildAssignmentHierarchy( query_set ):
     sorth = sorted(keys, key=lambda x: hierarchy[x]['name'])
     sorted_hierarchy = OrderedDict()
     for k in sorth:
-        sorted_hierarchy[ k ] = hierarchy[k]
+        sorted_hierarchy[k] = hierarchy[k]
     return sorted_hierarchy
 
 
@@ -115,9 +121,11 @@ Get the assignments for a given user. If type is set, only get that type of assi
 hierarchical is True, then generate a hierarchical list, including parent items that may NOT have been assigned but are
 needed for display purposes
 '''
-def assignmentsFor(user, type=None, hierarchical = False):
-    if ( type ):
-        results = Assignments.objects.filter(user=user).filter(type=type).all()
+
+
+def assignmentsFor(user, entity=None, hierarchical=False):
+    if (entity):
+        results = Assignments.objects.filter(user=user).filter(type=entity).all()
     else:
         results = Assignments.objects.filter(user=user).all()
     if hierarchical:
@@ -125,16 +133,43 @@ def assignmentsFor(user, type=None, hierarchical = False):
     else:
         return results
 
+
+'''
+Retrieve all meetings for a given user, restricted to their assignments
+Based on: https://stackoverflow.com/questions/46278166/django-filter-to-check-if-both-multiple-fields-are-in-list
+'''
+
+
+def meetingsFor(user, entity=None, entity_id=None):
+    assignments = assignmentsFor(user, entity)
+    assignment_filter = None
+    for a in assignments:
+        q = Q(type=a.type, tid=a.tid)
+        assignment_filter = q if assignment_filter is None else (assignment_filter | q)
+
+    if entity_id is not None:
+        meetings = Meeting.objects.filter(user=user).filter(tid=entity_id).all()
+    else:
+        meetings = Meeting.objects.filter(user=user).all()
+
+    if assignment_filter is not None:
+        meetings = meetings.filter(assignment_filter)
+
+    return meetings.order_by('-date')
+
+
 def getRedirectWithParam(message, location='attendance:home'):
     base_url = reverse(location)
     url = '{}?msg={}'.format(base_url, message)
     return redirect(url)
 
+
 '''
 Returns true if there is an entry in assignments linking this user with this student (either directly or through a class room or school)
 '''
-def userAssignedToStudent(user, student_id):
 
+
+def userAssignedToStudent(user, student_id):
     # was there a direct assignement?
     if Assignments.objects.filter(user=user).count() > 0:
         return True

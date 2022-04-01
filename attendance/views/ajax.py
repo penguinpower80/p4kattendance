@@ -48,7 +48,8 @@ def meetinglist(request, entity, entity_id):
         student = get_object_or_404(Student, pk=entity_id)
         classroom = student.classroom
 
-    meetings = meetingsFor(request.user, entity, entity_id)
-    my_list = list( meetings.values('date', 'id', 'tid', 'type') )
-    return JsonResponse( my_list, safe=False)
+    meetings = meetingsFor(request.user, entity, entity_id, True)
+    if meetings is None:
+        return JsonResponse({})
+    return JsonResponse( meetings, safe=False)
 

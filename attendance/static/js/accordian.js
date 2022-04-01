@@ -18,8 +18,12 @@ jQuery(document).ready(function($){
                         $parent.find('.is-meeting').remove()
                         for (x in list) {
                             let thisList = list[x]
+                            let link = "<li><a id='meeting-"+thisList.id+"' class='is-meeting button is-fullwidth is-outlined is-info' href='/meeting/"+ thisList.id+"'>" + thisList.date + "</a></li>"
                             if ( thisList.type == 'C' ) {
-                                $('#classroom-' + thisList.tid).find('.meetinglist').append("<li><a id='meeting-"+thisList.id+"' class='is-meeting button is-fullwidth is-outlined is-info' href='/meeting/"+ thisList.id+"'>" + thisList.date + "</a></li>")
+                                $('#classroom-' + id).find('#classroommeetings_' + thisList.tid).append( link )
+                            }
+                            if ( thisList.type == 'P' ) {
+                                $('#classroom-' + id).find('#studentmeetings_' + thisList.tid).append( link )
                             }
                         }
                     }

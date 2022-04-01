@@ -29,7 +29,8 @@ def meeting(request, type, id):
             raise PermissionDenied()
 
 
-    preexisting = Meeting.objects.filter(user=request.user).filter(date=datetime.datetime.now()).all()[:1]
+    preexisting = Meeting.objects.filter(user=request.user).filter(type=meeting_type).filter(tid='id').filter(date=datetime.datetime.now()).all()[:1]
+
     if preexisting:
         return redirect('/meeting/' + str(preexisting[0].id) )
 

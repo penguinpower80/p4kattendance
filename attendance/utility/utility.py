@@ -1,5 +1,6 @@
 import logging
 from collections import OrderedDict
+from itertools import chain
 
 from django.db.models import Q
 from django.shortcuts import redirect
@@ -140,22 +141,40 @@ Based on: https://stackoverflow.com/questions/46278166/django-filter-to-check-if
 '''
 
 
-def meetingsFor(user, entity=None, entity_id=None):
-    assignments = assignmentsFor(user, entity)
+def meetingsFor(user, entity=None, entity_id=None, includeStudents=False):
+    assignments = assignmentsFor(user)
+    # no assignments = no meetings
+    if (len(assignments) == 0):
+        return None
+
     assignment_filter = None
+    assigned_students = []
+    assigned_classrooms = []
     for a in assignments:
-        q = Q(type=a.type, tid=a.tid)
-        assignment_filter = q if assignment_filter is None else (assignment_filter | q)
+        if a.type == AssignmentTypes.CLASSROOM:
+            assigned_classrooms.append(a.tid)
+        if a.type == AssignmentTypes.STUDENT:
+            assigned_students.append(a.tid)
 
-    if entity_id is not None:
-        meetings = Meeting.objects.filter(user=user).filter(tid=entity_id).all()
-    else:
-        meetings = Meeting.objects.filter(user=user).all()
+    print(assigned_students)
+    print(assigned_classrooms)
 
-    if assignment_filter is not None:
-        meetings = meetings.filter(assignment_filter)
+    meetings = Meeting.objects.filter(user=user).filter(type=entity).order_by('-date')
 
-    return meetings.order_by('-date')
+
+    # this is for a specific student
+    if entity == AssignmentTypes.STUDENT and entity_id is not None:
+        return list(chain, meetings.filter(tid=entity_id).filter(tid__in=assigned_students)).values('date', 'id', 'tid', 'type')
+
+    if entity == AssignmentTypes.CLASSROOM and entity_id is not None:
+        if not includeStudents:
+            return list(chain(meetings.filter(tid=entity_id).filter(tid__in=assigned_classrooms))).values('date', 'id', 'tid', 'type')
+        else:
+            meetings = meetings.filter(tid=entity_id).filter(tid__in=assigned_classrooms).values('date', 'id', 'tid', 'type')
+            student_meetings = Meeting.objects.filter(user=user).filter(type=AssignmentTypes.STUDENT).filter(tid__in=assigned_students).values('date', 'id', 'tid', 'type')
+            return list(chain(meetings, student_meetings))
+
+    return None
 
 
 def getRedirectWithParam(message, location='attendance:home'):

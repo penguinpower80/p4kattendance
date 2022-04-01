@@ -35,3 +35,7 @@ ul.meetinglist {
     margin-top:0;
     margin-bottom: 15px;
 }
+
+.django-ckeditor-widget {
+    width: 100%;
+}

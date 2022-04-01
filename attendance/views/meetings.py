@@ -4,6 +4,7 @@ import logging
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, get_object_or_404, redirect
 
+from attendance.forms import NotesForm
 from attendance.models import AssignmentTypes, Classroom, Student, Meeting, Attendance
 from attendance.utility import isAssigned
 
@@ -65,9 +66,11 @@ def editmeeting(request, id):
 
     attendance = Attendance.objects.filter(meeting=meeting).all()
 
+    notesform = NotesForm()
     return render(request, 'attendance/meeting.html', {
         'students': students,
         'classroom': classroom,
         'meeting': meeting,
-        'attendance': attendance
+        'attendance': attendance,
+        'notesform': notesform
     })

@@ -135,7 +135,7 @@ jQuery(document).ready(function ($) {
         }, 5000)
     }
 
-    $(document).on('click', '.studentattendancerow button', function (e) {
+    $(document).on('click', '.studentattendancerow .attendance button', function (e) {
 
         $parent = $(this).closest('.studentattendancerow');
 
@@ -156,7 +156,7 @@ jQuery(document).ready(function ($) {
             let status = $(this).data('status')
             let meeting_id = $(this).data('meeting')
             markStudentAttendance(meeting_id, student_id, status, function(d){
-                $parent.find('button').removeClass('is-primary is-warning is-danger');
+                $parent.find('.attendance button').removeClass('is-primary is-warning is-danger');
                 if ( status == 'p' )
                     $button.addClass('is-primary')
                 else if( status=='a')
@@ -168,7 +168,56 @@ jQuery(document).ready(function ($) {
         }
     })
 
-
-
-
 })
+
+// from bulma.io doc's
+document.addEventListener('DOMContentLoaded', () => {
+  // Functions to open and close a modal
+  function openModal($el) {
+    $el.classList.add('is-active');
+  }
+
+  function closeModal($el) {
+    $el.classList.remove('is-active');
+  }
+
+  function closeAllModals() {
+    (document.querySelectorAll('.modal') || []).forEach(($modal) => {
+      closeModal($modal);
+    });
+  }
+
+  // Add a click event on buttons to open a specific modal
+  (document.querySelectorAll('.note-trigger') || []).forEach(($trigger) => {
+    const modal = $trigger.dataset.target;
+    const name = $trigger.dataset.name;
+    const id = $trigger.dataset.id;
+    const type = $trigger.dataset.typel
+    const $target = document.getElementById(modal);
+
+
+    $($target).find('.modal-card-title').html(name)
+
+    $trigger.addEventListener('click', () => {
+      openModal($target);
+    });
+  });
+
+  // Add a click event on various child elements to close the parent modal
+  (document.querySelectorAll('.modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button') || []).forEach(($close) => {
+    const $target = $close.closest('.modal');
+
+    $close.addEventListener('click', () => {
+      closeModal($target);
+    });
+  });
+
+  // Add a keyboard event to close all modals
+  document.addEventListener('keydown', (event) => {
+    const e = event || window.event;
+
+    if (e.keyCode === 27) { // Escape key
+      closeAllModals();
+    }
+  });
+});

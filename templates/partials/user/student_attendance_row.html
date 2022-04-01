@@ -1,7 +1,16 @@
 {% load attendancetags %}
 <div class="studentattendancerow box">
-    <h3>{{ student }}</h3>
-    <div class="field has-addons">
+    <div class="columns is-mobile">
+        <div class="column">
+            <h3>{{ student }}</h3>
+        </div>
+        <div class="column has-text-right">
+            <button class="note-trigger button is-warning is-small" data-type="student" data-id="{{ student.nde_id }}" data-name="{{ student }}" data-target="notes-modal"><span class="fas fa-sticky-note"></span></button>
+        </div>
+    </div>
+
+
+    <div class="attendance field has-addons has-addons-centered">
         <p class="control">
             <button class="button{% has_attendance_of attendance student.nde_id 'p' %}" data-rel="{{ student.nde_id }}" data-status="p" data-meeting="{{ meetingid }}">
                 <span>Present</span>

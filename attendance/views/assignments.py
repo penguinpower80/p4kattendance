@@ -1,5 +1,6 @@
 import logging
 
+from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import User
 from django.shortcuts import render, get_object_or_404, redirect
 
@@ -9,6 +10,7 @@ from attendance.utility import is_facilitator, is_mentor, assignmentsFor, getRed
 '''
 TODO: Add some permissions checking!!
 '''
+@user_passes_test(lambda u: u.is_superuser)
 def assignments(request):
     mentors = User.objects.filter(groups__name='Mentors')
     facilitators = User.objects.filter(groups__name='Facilitators')
@@ -22,6 +24,7 @@ def assignments(request):
 '''
 TODO: Add some permissions checking!!
 '''
+@user_passes_test(lambda u: u.is_superuser)
 def assign(request, userid):
     targetuser = get_object_or_404(User, pk=userid)
     if request.method == 'POST':

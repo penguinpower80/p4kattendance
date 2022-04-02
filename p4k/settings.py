@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'attendance.apps.AttendanceConfig',
-    'widget_tweaks'
+    'widget_tweaks',
+    'ckeditor'
 ]
 
 MIDDLEWARE = [
@@ -60,6 +61,20 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'p4k.urls'
+
+CKEDITOR_CONFIGS = {
+    'default': {
+         'toolbar': 'Custom',
+        'toolbar_Custom': [
+            ['Bold', 'Italic', 'Underline'],
+            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+            ['Link', 'Unlink'],
+            ['RemoveFormat', 'Source']
+        ],
+        'height': 300,
+        'width': '100%',
+    },
+}
 
 TEMPLATES = [
     {

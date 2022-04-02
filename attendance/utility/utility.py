@@ -155,10 +155,6 @@ def meetingsFor(user, entity=None, entity_id=None, includeStudents=False):
             assigned_classrooms.append(a.tid)
         if a.type == AssignmentTypes.STUDENT:
             assigned_students.append(a.tid)
-
-    print(assigned_students)
-    print(assigned_classrooms)
-
     meetings = Meeting.objects.filter(user=user).filter(type=entity).order_by('-date')
 
 

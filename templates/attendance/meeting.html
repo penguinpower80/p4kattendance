@@ -3,8 +3,22 @@
 {% block content %}
     <div class="columns">
         <div class="column">
-            <h2>Meeting - {{ classroom.name }}</h2>
-            <div class="is-size-6 has-text-info">({{ classroom.school.name }})</div>
+            <h2>
+                <button class="button is-danger is-small deletemeeting" data-rel="{{ meeting.id }}">
+            <i class="fas fa-trash-alt"></i>
+            </button>
+                Meeting -
+                <a class="note-trigger" data-type="classroom" data-id="{{ classroom.id }}" data-name="{{ classroom.name }} - {{ meeting.date }}" data-target="notes-modal">
+                {{ classroom.name }}
+                </a>
+
+            </h2>
+            <div class="is-size-6 has-text-info">(
+                <a class="note-trigger" data-type="school" data-id="{{ classroom.school.id }}" data-name="{{ classroom.school.name }}" data-target="notes-modal">
+                {{ classroom.school.name }}
+                </a>
+                )</div>
+
         </div>
         <div class="column is-one-quarter-desktop">
             <input data-meeting="{{ meeting.id }}" readonly type="date" value="{{ meeting.date|date:"Y-m-d" }}" name="meeting_date" id="meeting_date"/>

@@ -4,5 +4,5 @@ from django.shortcuts import render
 
 @login_required
 def reports(request):
-    return render(request, 'attendance/reports.html')
+    return render(request, 'templates/attendance/reports.html')
 

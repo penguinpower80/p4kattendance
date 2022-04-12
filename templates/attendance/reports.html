@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Reports{% endblock %}
+{% block content %}
+<h2>Reports</h2>
+        <div class="columns">
+            <div class="column">
+                <a class="box has-text-centered" href='#'>
+                    MEETING NOTES
+                </a>
+                <a class="box has-text-centered" href="{% url 'partials/user/student_attendance_row.html' %}">
+                    STUDENT LIST
+                </a>
+            </div>
+
+        </div>
+{% endblock %}

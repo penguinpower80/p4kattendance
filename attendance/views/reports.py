@@ -3,6 +3,6 @@ from django.shortcuts import render
 
 
 @login_required
-def report(request):
+def reports(request):
     return render(request, 'attendance/reports.html')
 

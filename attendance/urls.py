@@ -11,6 +11,7 @@ urlpatterns = [
           path('meeting/delete/<int:id>', views.deletemeeting, name='deletemeeting'),
           path('meeting/<int:id>', views.editmeeting, name='editmeeting'),
           path('meeting/<str:type>/<str:id>', views.meeting, name='meeting'),
+          path('reports', views.reports, name='reports'),
           path('ajax/markattendance/<int:meeting_id>/<str:student_id>', views.markattendance, name='markattendance'),
           path('ajax/meetinglist/<str:entity>/<str:entity_id>', views.meetinglist, name='meetinglist'),
           path('ajax/note/delete/<int:id>', views.deletenote, name='deletenote'),

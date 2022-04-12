@@ -17,5 +17,4 @@ urlpatterns = [
           path('ajax/noteslist/<str:entity>/<str:entity_id>', views.noteslist, name='noteslist'),
           path('ajax/setmeetingdate/<int:meeting_id>', views.setmeetingdate, name='setmeetingdate'),
           path('ajax/savenote/<str:entity>/<str:entity_id>', views.savenote, name='savenote'),
-          path('reports', views.reports, name='reports'),
 ]

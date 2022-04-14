@@ -1,7 +1,7 @@
 from django.urls import path
 
 from . import views
-from .views import ReportListView
+from .views import reports
 
 app_name = 'attendance'
 
@@ -9,7 +9,6 @@ urlpatterns = [
           path('', views.home, name='home'),
           path('import', views.importfiles, name='import'),
           path('assignments', views.assignments, name='assignments'),
-          path('', ReportListView.as_view(), name='reports'),
           path('assignments/<int:userid>', views.assign, name='assign'),
           path('meeting/delete/<int:id>', views.deletemeeting, name='deletemeeting'),
           path('meeting/<int:id>', views.editmeeting, name='editmeeting'),
@@ -20,4 +19,5 @@ urlpatterns = [
           path('ajax/noteslist/<str:entity>/<str:entity_id>', views.noteslist, name='noteslist'),
           path('ajax/setmeetingdate/<int:meeting_id>', views.setmeetingdate, name='setmeetingdate'),
           path('ajax/savenote/<str:entity>/<str:entity_id>', views.savenote, name='savenote'),
+          path('reports', views.reports, name='reports'),
 ]

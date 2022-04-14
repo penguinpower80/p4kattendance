@@ -1,9 +1,11 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+from django.views.generic import ListView
+from attendance.models import Student
 
 
 @login_required
-def reports(request):
-    context = {}
-    return render(request, 'attendance/reports.html', context=context)
+class ReportListView(ListView):
+    model = Student
+    template_name = 'attendance/reports.html'
 

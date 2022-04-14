@@ -3,7 +3,7 @@ from django.shortcuts import render
 
 
 @login_required
-def report(request):
+def reports(request):
     context = {}
     return render(request, 'attendance/reports.html', context=context)
 

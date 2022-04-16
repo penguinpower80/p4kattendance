@@ -42,12 +42,15 @@ def markattendance(request, student_id, meeting_id):
 
     return HttpResponse(status=200)
 
+
 '''
 Handles meeting list
 '''
+
+
 @login_required()
 def noteslist(request, entity, entity_id):
-    if entity=='classroom':
+    if entity == 'classroom':
         entity_type = AssignmentTypes.CLASSROOM
     if entity == 'school':
         entity_type = AssignmentTypes.SCHOOL
@@ -80,14 +83,14 @@ def noteslist(request, entity, entity_id):
         'notes': notes_list
     }
 
-
     return JsonResponse(response, safe=False)
 
-'''
-Handles getting a meeting list
-'''
+
 @login_required
 def meetinglist(request, entity, entity_id):
+    '''
+    Handles getting a meeting list
+    '''
     if entity == AssignmentTypes.CLASSROOM:
         classroom = get_object_or_404(Classroom, pk=entity_id)
     if entity == AssignmentTypes.STUDENT:
@@ -100,11 +103,11 @@ def meetinglist(request, entity, entity_id):
     return JsonResponse(meetings, safe=False)
 
 
-'''
-Hanldes updating the date for a meeting
-'''
 @login_required
 def setmeetingdate(request, meeting_id):
+    '''
+    Hanldes updating the date for a meeting
+    '''
     meeting = get_object_or_404(Meeting, pk=meeting_id)
     timestamp = request.POST.get("timestamp", None)
 
@@ -117,11 +120,11 @@ def setmeetingdate(request, meeting_id):
     return HttpResponse(status=500)
 
 
-'''
-Handles saving a note
-'''
 @login_required()
 def savenote(request, entity, entity_id):
+    '''
+    Handles saving a note
+    '''
     if entity == 'classroom':
         entity_object = get_object_or_404(Classroom, pk=entity_id)
         meeting_type = AssignmentTypes.CLASSROOM
@@ -136,7 +139,7 @@ def savenote(request, entity, entity_id):
 
     visible = request.POST.get("visible", 'true') == 'true'
     if text is None or text == '':
-        return HttpResponse('You must provide text!',status=500)
+        return HttpResponse('You must provide text!', status=500)
 
     note = Notes.objects.create(
         author=request.user,
@@ -148,11 +151,31 @@ def savenote(request, entity, entity_id):
 
     return HttpResponse(status=200)
 
-'''
-handle delete note
-'''
+
+@login_required()
+def updatenote(request, note_id):
+    '''
+    Handles updating a note
+    '''
+
+    note_object = get_object_or_404(Notes, pk=note_id)
+    text = request.POST.get("text", None)
+    visible = request.POST.get("visible", 'true') == 'true'
+    if text is None or text == '':
+        return HttpResponse('You must provide text!', status=500)
+
+    note_object.text = text
+    note_object.visible = visible
+    note_object.save()
+
+    return HttpResponse(status=200)
+
+
 @login_required()
 def deletenote(request, id):
+    '''
+    handle delete note
+    '''
     note = get_object_or_404(Notes, pk=id)
     if note.author == request.user or request.user.groups.filter(name='Facilitators').exists():
         note.delete();

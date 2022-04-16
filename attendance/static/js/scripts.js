@@ -64,7 +64,7 @@ function markStudentAttendance(meeting, student, status, callback) {
     })
 }
 
-function saveNote(entity, id, visible, note , callback) {
+function saveNote(entity, id, visible, note, callback) {
     jQuery.post('/ajax/savenote/' + entity + '/' + id, {
         text: note,
         visible: visible,
@@ -76,11 +76,30 @@ function saveNote(entity, id, visible, note , callback) {
     }).fail(function (d) {
         if (d.responseText) {
             msg(d.responseText, 'error')
-        }
-        else if (d.status == 401) {
+        } else if (d.status == 401) {
             msg('You are not assigned to this user.', 'error')
         } else {
             msg('There was an error saving the note.', 'error')
+        }
+    })
+}
+
+function updateNote(id, visible, note, callback) {
+    jQuery.post('/ajax/updatenote/' + id, {
+        text: note,
+        visible: visible,
+        csrfmiddlewaretoken: csrftoken
+    }, function (data) {
+        msg('Note Updated!')
+        if (callback) callback(data)
+    }).always(function () {
+    }).fail(function (d) {
+        if (d.responseText) {
+            msg(d.responseText, 'error')
+        } else if (d.status == 401) {
+            msg('You are not assigned to this user.', 'error')
+        } else {
+            msg('There was an error updating the note.', 'error')
         }
     })
 }
@@ -100,9 +119,8 @@ function getMeetingList(type, id, callback) {
 }
 
 
-
 function deleteNote(id, callback) {
-        jQuery.get('/ajax/note/delete/' + id, function (data) {
+    jQuery.get('/ajax/note/delete/' + id, function (data) {
         if (callback) callback(data)
     }).always(function () {
     }).fail(function (d) {
@@ -237,7 +255,7 @@ jQuery(document).ready(function ($) {
         })
     })
 
-    $(document).on('click', '.deletenote', function(e){
+    $(document).on('click', '.deletenote', function (e) {
         e.preventDefault()
         let $button = $(this)
         let note = $button.data('rel');
@@ -251,14 +269,23 @@ jQuery(document).ready(function ($) {
             confirmButtonText: 'Delete'
         }).then((result) => {
             if (result.isConfirmed) {
-                deleteNote(note, function(d){
+                deleteNote(note, function (d) {
                     $button.closest('.noterow').remove()
                     msg('Note deleted!')
                 })
             }
         })
     })
+})
 
+$(document).on('click', '.editnote', function (e) {
+    e.preventDefault()
+    let $button = $(this)
+    let note = $button.data('rel');
+    let content = $button.closest('.card').find('.content').html()
+    $button.closest('.card').css('opacity', '0.25')
+    noteData['noteid'] = note
+    CKEDITOR.instances['id_Note'].setData(content)
 })
 
 let noteData = {}
@@ -285,7 +312,6 @@ document.addEventListener('DOMContentLoaded', () => {
     (document.querySelectorAll('.note-trigger') || []).forEach(($trigger) => {
         const modal = $trigger.dataset.target;
         const $target = document.getElementById(modal);
-
 
 
         $trigger.addEventListener('click', () => {
@@ -323,19 +349,30 @@ document.addEventListener('DOMContentLoaded', () => {
             CKEDITOR.instances['id_Note'].setData('')
         });
     });
+
+
     (document.querySelectorAll('.modal-card-foot .button.savenote') || []).forEach(($close) => {
         const $target = $close.closest('.modal');
 
         $close.addEventListener('click', () => {
             note = CKEDITOR.instances['id_Note'].getData()
             let visible = 'true'
-            if ( $('#notevisible').length ) {
+            if ($('#notevisible').length) {
                 visible = $('#notevisible')[0].checked
             }
-            saveNote(noteData.type, noteData.id, visible, note, function (d) {
-                closeModal($target);
-                CKEDITOR.instances['id_Note'].setData('')
-            })
+
+            if (noteData.noteid) {
+                updateNote(noteData.noteid, visible, note, function (d) {
+                    CKEDITOR.instances['id_Note'].setData('')
+                    delete noteData.noteid
+                    $('.modal-card-foot .button.listnotes').trigger('click')
+                })
+            } else {
+                saveNote(noteData.type, noteData.id, visible, note, function (d) {
+                    closeModal($target);
+                    CKEDITOR.instances['id_Note'].setData('')
+                })
+            }
 
 
         });
@@ -343,34 +380,40 @@ document.addEventListener('DOMContentLoaded', () => {
     (document.querySelectorAll('.modal-card-foot .button.listnotes') || []).forEach(($close) => {
         const $target = $close.closest('.modal');
         $close.addEventListener('click', () => {
-            getNoteList(noteData.type, noteData.id, function(d){
+            getNoteList(noteData.type, noteData.id, function (d) {
                 let $holder = $('#noteslist')
                 $holder.html('')
-                if (d.msg ) msg(d.msg )
-                if ( d.notes && d.notes.length ) {
+                if (d.msg) msg(d.msg)
+                if (d.notes && d.notes.length) {
                     let template = document.querySelector('#noterow');
                     for (let note in d.notes) {
                         let thisNote = d.notes[note]
                         let clone = template.content.cloneNode(true)
                         clone.querySelectorAll('.card-header-title')[0].textContent = thisNote.author + ', ' + thisNote.created
+                        if ( thisNote.created != thisNote.updated ) {
+                            clone.querySelectorAll('.extranoteinfo')[0].textContent = "(updated " + thisNote.updated + ")";
+                        }
+
+
                         clone.querySelectorAll('.content')[0].innerHTML = thisNote.text
                         /* clone.querySelectorAll('.updated')[0].textContent = thisNote.updated*/
                         /*clone.querySelectorAll('.editnote')[0].dataset.rel = thisNote.id*/
                         clone.querySelectorAll('.deletenote')[0].dataset.rel = thisNote.id
+                        clone.querySelectorAll('.editnote')[0].dataset.rel = thisNote.id
                         if (thisNote.can_modify) {
 
                             clone.querySelectorAll('.deletenote')[0].classList.remove('is-hidden')
+                            clone.querySelectorAll('.editnote')[0].classList.remove('is-hidden')
                             /*clone.querySelectorAll('.editnote')[0].classList.remove('is-hidden')*/
                         } else {
                             /*clone.querySelectorAll('.editnote')[0].classList.add('is-hidden')*/
                             clone.querySelectorAll('.deletenote')[0].classList.add('is-hidden')
+                            clone.querySelectorAll('.editnote')[0].classList.add('is-hidden')
                         }
-                        $holder.append( clone )
+                        $holder.append(clone)
                     }
                 }
             })
-
-
         });
     });
 

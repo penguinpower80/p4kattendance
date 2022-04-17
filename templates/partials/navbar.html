@@ -9,21 +9,31 @@
     </div>
     <div id="attendancemainnav" class="navbar-menu">
         <div class="navbar-end">
-        <div class="navbar-item">
-            <a class="{% if request.resolver_match.url_name == "home" %}button is-outlined{% endif %}" href="{% url 'attendance:home' %}">Home</a>
-        </div>
+            <div class="navbar-item">
+                <a class="{% if request.resolver_match.url_name == "home" %}button is-outlined{% endif %}"
+                   href="{% url 'attendance:home' %}">Home</a>
+            </div>
             {% if user.is_authenticated %}
                 {% if user.is_superuser %}
                     <div class="navbar-item">
-                    <a class="{% if request.resolver_match.url_name == "import" %}button is-outlined{% endif %}" href="{% url 'attendance:import' %}">Import</a>
+                        <a class="{% if request.resolver_match.url_name == "users" %}button is-outlined{% endif %}"
+                           href="{% url 'attendance:users' %}">Users</a>
                     </div>
                     <div class="navbar-item">
-                    <a class="{% if request.resolver_match.url_name == "assignments" %}button is-outlined{% endif %}" href="{% url 'attendance:assignments' %}">Assignments</a>
+                        <a class="{% if request.resolver_match.url_name == "assignments" %}button is-outlined{% endif %}"
+                           href="{% url 'attendance:assignments' %}">Assignments</a>
+                    </div>
+                    <div class="navbar-item">
+                        <a class="{% if request.resolver_match.url_name == "import" %}button is-outlined{% endif %}"
+                           href="{% url 'attendance:import' %}">Import</a>
                     </div>
                 {% endif %}
-  
-                <a class="navbar-item" href="{% url 'password_change' %}">Change Password</a>
-                <a class="navbar-item logout-button" href="{% url 'logout' %}">Log Out</a>
+                <div class="navbar-item">
+                    <a class="" href="{% url 'password_change' %}">Change Password</a>
+                </div>
+                <div class="navbar-item">
+                    <a class="logout-button" href="{% url 'logout' %}">Log Out</a>
+                </div>
             {% else %}
                 <a class="navbar-item" href="{% url 'login' %}">Log In</a>
             {% endif %}

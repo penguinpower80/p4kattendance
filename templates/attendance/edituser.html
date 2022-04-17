@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Edit User{% endblock title %}
+
+{% block content %}
+<h2>Edit User</h2>
+    <hr />
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% include 'partials/bulma_form.html' with form=form %}
+        <div class="control">
+            <div class="columns has-text-centered">
+                <div class="column">
+                    <a class="button is-warning" type="button" href="{% url 'attendance:users' %}">CANCEL</a>
+                </div>
+                <div class="column">
+                    <a class="button is-danger" type="button" onclick="return confirm('Are you sure?')" href="{% url 'attendance:deleteuser' id %}">DELETE</a>
+                </div>
+                <div class="column">
+                    <button class="button is-primary" type="submit">UPDATE</button>
+                </div>
+            </div>
+
+
+
+        </div>
+    </form>
+{% endblock content %}

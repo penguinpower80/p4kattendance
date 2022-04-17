@@ -1,0 +1,20 @@
+<div class="column is-one-third-desktop">
+    <h2>{{ title }}s</h2>
+    <div class="box assignmentselectorbox">
+        <a href="{% url 'attendance:adduser' title|lower %}" class="button is-large is-fullwidth is-primary">
+              <span class="icon">
+                <i class="fas fa-plus"></i>
+              </span>
+
+            <span>New {{ title }}</span>
+        </a>
+
+        {% for user in user_list %}
+            <a href="{% url 'attendance:edituser' user.id %}"
+               class="button is-large is-fullwidth is-outlined is-primary mt-3 mb-3">
+                {{ user.get_full_name }}
+
+            </a>
+        {% endfor %}
+    </div>
+</div>

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Assignments{% endblock %}
+{% block content %}
+<h2>Users</h2>
+        <div class="columns">
+        {% include 'partials/users/personlist.html' with title="Facilitator" user_list=facilitators only %}
+        {% include 'partials/users/personlist.html' with title="Mentor" user_list=mentors only %}
+        </div>
+{% endblock %}
+
+{{ schools }}

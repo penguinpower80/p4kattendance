@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Add {{ type }}{% endblock title %}
+
+{% block content %}
+<h2>Add {{ type }}</h2>
+    <hr />
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% include 'partials/bulma_form.html' with form=form %}
+        <div class="control">
+            <div class="columns has-text-centered">
+                <div class="column">
+                    <a class="button is-warning" type="button" href="{% url 'attendance:users' %}">CANCEL</a>
+                </div>
+                <div class="column">
+                    <button class="button is-primary" type="submit">ADD {{ type|upper }}</button>
+                </div>
+            </div>
+
+
+
+        </div>
+    </form>
+{% endblock content %}

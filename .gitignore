@@ -2,3 +2,4 @@
 /staticfiles/admin/
 /venv/
 /.idea/
+.env

@@ -3,22 +3,44 @@
 {% block title %}Log In{% endblock %}
 {% block content %}
 
-<div class="container p-20">
-    <div class="columns is-mobile is-centered">
-        <div class="column is-four-fifths-mobile is-two-thirds-tablet is-two-fifths-desktop is-two-fifths-widescreen is-two-fifths-fullhd">
-            <form method="post">
-                <h2 class="title is-2 has-text-centered p-5">Log In</h2>
-                <div class="control">
-                    {% csrf_token %}
-                    {% include 'partials/bulma_form.html' with form=form %}
-                </div>
-                <div class="control mt-5">
-                    <button class="button is-link is-fullwidth" type="submit">Log In</button>
-                </div>
-                <p class="has-text-grey has-text-centered p-5"><a class="has-text-grey" href="{% url 'password_reset' %}">Forgot password?</a></p>
-            </form>
+    <div class="container p-20">
+        <div class="columns is-mobile is-centered">
+            <div class="column is-four-fifths-mobile is-two-thirds-tablet is-two-fifths-desktop is-two-fifths-widescreen is-two-fifths-fullhd">
+                <form method="post">
+                    <h2 class="title is-2 has-text-centered p-5">Log In</h2>
+                    <div class="control">
+                        {% csrf_token %}
+                        {% include 'partials/bulma_form.html' with form=form %}
+                    </div>
+                    <div class="control mt-5">
+                        <button class="button is-link is-fullwidth" type="submit">Log In</button>
+                    </div>
+                    <p class="has-text-grey has-text-centered p-5"><a class="has-text-grey" href="{% url 'password_reset' %}">Forgot password?</a></p>
+                </form>
+                <hr />
+                <div>
+        <div class="columns is-mobile is-centered">
+            <div class="column">
+                {% if google %}
+                    <a class="button" href="{% url "social:begin" "google-oauth2" %}">Google+</a>
+                {% endif %}
+            </div>
+            <div class="column">
+                {% if twitter %}
+                    <a class="button" href="{% url "social:begin" "twitter-oauth" %}">Twitter</a>
+                {% endif %}
+            </div>
         </div>
     </div>
-</div>
+
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+
 
 {% endblock %}

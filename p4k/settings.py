@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
+import logging
 import os
 from pathlib import Path
 from decouple import config
@@ -18,7 +19,6 @@ HOSTING = config('HOSTING', default='LOCAL')
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 if HOSTING == 'HEROKU':
     import django_heroku
-
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -35,7 +35,6 @@ DEBUG = config('DEBUG', default=False)
 
 ALLOWED_HOSTS = ['*']
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -47,7 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'attendance.apps.AttendanceConfig',
     'widget_tweaks',
-    'ckeditor'
+    'ckeditor',
+    'social_django'
 ]
 
 MIDDLEWARE = [
@@ -60,11 +60,17 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.twitter.TwitterOAuth',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
 ROOT_URLCONF = 'p4k.urls'
 
 CKEDITOR_CONFIGS = {
     'default': {
-         'toolbar': 'Custom',
+        'toolbar': 'Custom',
         'toolbar_Custom': [
             ['Bold', 'Italic', 'Underline'],
             ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
@@ -88,6 +94,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'socialcontext.socialproviders',
             ],
         },
     },
@@ -108,7 +115,6 @@ if EMAIL == 'SENDGRID':
     EMAIL_PORT = 587
     EMAIL_USE_TLS = True
     DEFAULT_FROM_EMAIL = config('FROM', default=None)
-
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
@@ -132,7 +138,6 @@ else:
         },
     }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
@@ -151,7 +156,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
@@ -162,7 +166,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
@@ -176,11 +179,11 @@ MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-#https://blog.theodo.com/2019/07/aws-s3-upload-django/
+# https://blog.theodo.com/2019/07/aws-s3-upload-django/
 AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID", default=None)
 AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY", default=None)
 AWS_STORAGE_BUCKET_NAME = config("AWS_STORAGE_BUCKET_NAME", default=None)
-AWS_S3_REGION_NAME="us-east-1"
+AWS_S3_REGION_NAME = "us-east-1"
 AWS_QUERYSTRING_AUTH = False
 if AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY and AWS_STORAGE_BUCKET_NAME:
     DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
@@ -190,6 +193,11 @@ else:
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY', default='')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET', default='')
+
+SOCIAL_AUTH_TWITTER_KEY = config('SOCIAL_AUTH_TWITTER_KEY', default='')
+SOCIAL_AUTH_TWITTER_SECRET = config('SOCIAL_AUTH_TWITTER_SECRET', default='')
 
 if HOSTING == 'HEROKU':
     django_heroku.settings(locals())

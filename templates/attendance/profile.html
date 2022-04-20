@@ -53,52 +53,43 @@
                             Link Social Media Accounts
                         </div>
                     </div>
-                    {% if not facebook_login %}
-                        <div class="columns">
-                        <div class="column">
-                            <a class=""
-                               href="{% if facebook_login %}#{% else %}{% url 'social:begin' 'facebook' %}?next=/profile{% endif %}">
-                                <span class="fab fa-3x fa-facebook-square"></span>
-                                <br/>
-                                Facebook
-                            </a>
-                        </div>
-                    {% endif %}
-
-                    {% if not google_login %}
-                        <div class="column">
-                            <a class=""
-                               href="{% if google_login %}#{% else %}{% url 'social:begin' 'google-oauth2' %}?next=/profile{% endif %}">
-                                <span class="fab fa-3x fa-google-plus-square"></span>
-                                <br/>
-                                Google+
-                            </a>
-                        </div>
-                    {% endif %}
-
-
-                    {% if not twitter_login %}
-                        <div class="column">
-                            <a class="is-disabled"
-                               href="{% if twitter_login %}#{% else %}{% url 'social:begin' 'twitter' %}?next=/profile{% endif %}">
-                                <span class="fab fa-3x fa-twitter-square"></span>
-                                <br/>
-                                Twitter
-                            </a>
-                        </div>
-                    {% endif %}
-                    {% if False %}
-                        <div class="column">
-                            <a class="{% if linkedin_login %}is-disabled{% endif %}"
-                               href="{% if linkedin_login %}#{% else %}{% url 'social:begin' 'linkedin-oauth2' %}{% endif %}">
-                                <span class="fab fa-3x fa-linkedin"></span>
-                                <br/>
-                                LinkedIn
-                            </a>
-                        </div>
-                    {% endif %}
+                    <div class="columns">
+                        {% if not facebook_login %}
+                            <div class="column">
+                                <a class=""
+                                   href="{% if facebook_login %}#
+                                       {% else %}{% url 'social:begin' 'facebook' %}?next=/profile{% endif %}">
+                                    <span class="fab fa-3x fa-facebook-square"></span>
+                                    <br/>
+                                    Facebook
+                                </a>
+                            </div>
+                        {% endif %}
+                        {% if not google_login %}
+                            <div class="column">
+                                <a class=""
+                                   href="{% if google_login %}#
+                                       {% else %}{% url 'social:begin' 'google-oauth2' %}?next=/profile{% endif %}">
+                                    <span class="fab fa-3x fa-google-plus-square"></span>
+                                    <br/>
+                                    Google+
+                                </a>
+                            </div>
+                        {% endif %}
+                        {% if not twitter_login %}
+                            <div class="column">
+                                <a class="is-disabled"
+                                   href="{% if twitter_login %}#
+                                       {% else %}{% url 'social:begin' 'twitter' %}?next=/profile{% endif %}">
+                                    <span class="fab fa-3x fa-twitter-square"></span>
+                                    <br/>
+                                    Twitter
+                                </a>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
+
                 {% if google_login %}
                     <div class="box">
                         <h3 class="title">
@@ -113,24 +104,6 @@
                             </form>
                         {% else %}
                             <button class="button" type="button" disabled>Disconnect from Google+</button>
-                            <p class="has-text-danger">You must <a href="{% url 'website:password' %}">define a
-                                password</a> for your
-                                account before disconnecting.</p>
-                        {% endif %}
-                    </div>
-                {% endif %}
-                {% if linkedin_login %}
-                    <div class="box">
-                        <h3>Linked In</h3>
-                        <p>Connected as <a href="https://github.com/{{ github_login.extra_data.login }}/"
-                                           target="_blank">{{ linkedin_login.extra_data.login }}</a></p>
-                        {% if can_disconnect %}
-                            <form method="post" action="{% url 'social:disconnect' 'linkedin' %}?next=/profile">
-                                {% csrf_token %}
-                                <button class="button" type="submit">Disconnect from LinkedIn</button>
-                            </form>
-                        {% else %}
-                            <button class="button" type="button" disabled>Disconnect from LinkedIn</button>
                             <p class="has-text-danger">You must <a href="{% url 'website:password' %}">define a
                                 password</a> for your
                                 account before disconnecting.</p>

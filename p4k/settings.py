@@ -22,8 +22,6 @@ if HOSTING == 'HEROKU':
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SOCIAL_AUTH_LOGIN_ERROR_URL = '/user/error/'
-SOCIAL_AUTH_RAISE_EXCEPTIONS = False
 LOGIN_ERROR_URL='/'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/

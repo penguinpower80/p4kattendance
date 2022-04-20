@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}My Profile{% endblock %}
+{% block content %}
+    <h2>My Profile</h2>
+    <div class="userprofile section">
+        <div class="columns">
+
+            <div class="column">
+                <div class="field">
+                    <label class="label">Username</label>
+                    <div class="control">
+                        <input class="input" type="text" value="{{ user.username }}" disabled>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        <div class="field">
+                            <label class="label">First Name</label>
+                            <div class="control">
+                                <input value="{{ user.first_name }}" class="input" type="text" placeholder="First Name"
+                                       id="first_name">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="field">
+                            <label class="label">Last Name</label>
+                            <div class="control">
+                                <input value="{{ user.last_name }}" class="input" type="text" placeholder="Last Name"
+                                       id="last_name">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Email</label>
+                    <div class="control">
+                        <input value="{{ user.email }}" class="input" type="text" placeholder="Email" id="email">
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="columns">
+
+            <div class="column">
+                <h3>Social Logins</h3>
+                <div class="box has-text-centered">
+                    <div class="level">
+                        <div class="level-item">
+                            Link Social Media Accounts
+                        </div>
+                    </div>
+                    {% if not facebook_login %}
+                        <div class="columns">
+                        <div class="column">
+                            <a class=""
+                               href="{% if facebook_login %}#{% else %}{% url 'social:begin' 'facebook' %}?next=/profile{% endif %}">
+                                <span class="fab fa-3x fa-facebook-square"></span>
+                                <br/>
+                                Facebook
+                            </a>
+                        </div>
+                    {% endif %}
+
+                    {% if not google_login %}
+                        <div class="column">
+                            <a class=""
+                               href="{% if google_login %}#{% else %}{% url 'social:begin' 'google-oauth2' %}?next=/profile{% endif %}">
+                                <span class="fab fa-3x fa-google-plus-square"></span>
+                                <br/>
+                                Google+
+                            </a>
+                        </div>
+                    {% endif %}
+
+
+                    {% if not twitter_login %}
+                        <div class="column">
+                            <a class="is-disabled"
+                               href="{% if twitter_login %}#{% else %}{% url 'social:begin' 'twitter' %}?next=/profile{% endif %}">
+                                <span class="fab fa-3x fa-twitter-square"></span>
+                                <br/>
+                                Twitter
+                            </a>
+                        </div>
+                    {% endif %}
+                    {% if False %}
+                        <div class="column">
+                            <a class="{% if linkedin_login %}is-disabled{% endif %}"
+                               href="{% if linkedin_login %}#{% else %}{% url 'social:begin' 'linkedin-oauth2' %}{% endif %}">
+                                <span class="fab fa-3x fa-linkedin"></span>
+                                <br/>
+                                LinkedIn
+                            </a>
+                        </div>
+                    {% endif %}
+                    </div>
+                </div>
+                {% if google_login %}
+                    <div class="box">
+                        <h3 class="title">
+                            Google+
+                        </h3>
+                        <p>Connected as <a href="https://myaccount.google.com/"
+                                           target="_blank">{{ google_login.uid }}</a></p>
+                        {% if can_disconnect %}
+                            <form method="post" action="{% url 'social:disconnect' 'google-oauth2' %}?next=/profile">
+                                {% csrf_token %}
+                                <button class="button" type="submit">Disconnect from Google+</button>
+                            </form>
+                        {% else %}
+                            <button class="button" type="button" disabled>Disconnect from Google+</button>
+                            <p class="has-text-danger">You must <a href="{% url 'website:password' %}">define a
+                                password</a> for your
+                                account before disconnecting.</p>
+                        {% endif %}
+                    </div>
+                {% endif %}
+                {% if linkedin_login %}
+                    <div class="box">
+                        <h3>Linked In</h3>
+                        <p>Connected as <a href="https://github.com/{{ github_login.extra_data.login }}/"
+                                           target="_blank">{{ linkedin_login.extra_data.login }}</a></p>
+                        {% if can_disconnect %}
+                            <form method="post" action="{% url 'social:disconnect' 'linkedin' %}?next=/profile">
+                                {% csrf_token %}
+                                <button class="button" type="submit">Disconnect from LinkedIn</button>
+                            </form>
+                        {% else %}
+                            <button class="button" type="button" disabled>Disconnect from LinkedIn</button>
+                            <p class="has-text-danger">You must <a href="{% url 'website:password' %}">define a
+                                password</a> for your
+                                account before disconnecting.</p>
+                        {% endif %}
+                    </div>
+                {% endif %}
+                {% if twitter_login %}
+                    <div class="box">
+                        <h3>Twitter</h3>
+                        <p>Connected as <a
+                                href="https://twitter.com/{{ twitter_login.extra_data.access_token.screen_name }}/"
+                                target="_blank">@{{ twitter_login.extra_data.access_token.screen_name }}</a></p>
+                        {% if can_disconnect %}
+                            <form method="post" action="{% url 'social:disconnect' 'twitter' %}?next=/profile">
+                                {% csrf_token %}
+                                <button class="button" type="submit">Disconnect from Twitter</button>
+                            </form>
+                        {% else %}
+                            <button class="button" type="button" disabled>Disconnect from Twitter</button>
+                            <p class="has-text-danger">You must <a href="{% url 'website:password' %}">define a
+                                password</a> for your
+                                account before disconnecting.</p>
+                        {% endif %}
+                    </div>
+                {% endif %}
+                {% if facebook_login %}
+                    <div class="box">
+                        <h3>Facebook</h3>
+                        <p>Connected as <a href="https://facebook.com/{{ facebook_login.extra_data.id }}/"
+                                           target="_blank">{{ facebook_login.extra_data.id }}</a></p>
+                        {% if can_disconnect %}
+                            <form method="post" action="{% url 'social:disconnect' 'facebook' %}?next=/profile">
+                                {% csrf_token %}
+                                <button class="button" type="submit">Disconnect from Facebook</button>
+                            </form>
+                        {% else %}
+                            <button class="button" type="button" disabled>Disconnect from Facebook</button>
+                            <p class="has-text-danger">You must <a href="{% url 'website:password' %}">define a
+                                password</a> for your
+                                account before disconnecting.</p>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

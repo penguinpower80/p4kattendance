@@ -29,11 +29,16 @@
                     </div>
                 {% endif %}
                 <div class="navbar-item">
+                    <a class="profile-button {% if request.resolver_match.url_name == "profile" %}button is-outlined{% endif %}" href="{% url 'attendance:profile' %}">Profile</a>
+                </div>
+                <div class="navbar-item">
                     <a class="" href="{% url 'password_change' %}">Change Password</a>
                 </div>
+
                 <div class="navbar-item">
                     <a class="logout-button" href="{% url 'logout' %}">Log Out</a>
                 </div>
+
             {% else %}
                 <a class="navbar-item" href="{% url 'login' %}">Log In</a>
             {% endif %}

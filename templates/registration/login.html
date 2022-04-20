@@ -36,6 +36,10 @@
             </div>
             {% endif %}
         </div>
+                {% if message %}
+                    {{ backend }}
+                    {{ message }}
+                {% endif %}
     </div>
 
 

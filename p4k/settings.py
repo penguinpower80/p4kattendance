@@ -16,6 +16,16 @@ from decouple import config
 
 HOSTING = config('HOSTING', default='LOCAL')
 
+SOCIAL_AUTH_PIPELINE = (
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.auth_allowed',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.user.user_details',
+)
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 if HOSTING == 'HEROKU':
     import django_heroku

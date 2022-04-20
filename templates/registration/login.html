@@ -15,33 +15,41 @@
                     <div class="control mt-5">
                         <button class="button is-link is-fullwidth" type="submit">Log In</button>
                     </div>
-                    <p class="has-text-grey has-text-centered p-5"><a class="has-text-grey" href="{% url 'password_reset' %}">Forgot password?</a></p>
+                    <p class="has-text-grey has-text-centered p-5"><a class="has-text-grey"
+                                                                      href="{% url 'password_reset' %}">Forgot
+                        password?</a></p>
                 </form>
-                <hr />
+                <hr/>
                 <div>
-        <div class="columns is-mobile is-centered">
-            {% if google %}
-            <div class="column">
-                    <a class="button" href="{% url "social:begin" "google-oauth2" %}?next={{ request.path }}">Login with Google+</a>
-            </div>
-            {% endif %}
-            {% if twitter %}
-            <div class="column">
-                    <a class="button" href="{% url 'social:begin' 'twitter' %}?next={{ request.path }}">Login with Twitter</a>
-            </div>
-            {% endif %}
-             {% if facebook %}
-            <div class="column">
-                    <a class="button" href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}">Login with Facebook</a>
-            </div>
-            {% endif %}
-        </div>
-                {% if message %}
-                    {{ backend }}
-                    {{ message }}
-                {% endif %}
-    </div>
-
+                    <div class="columns is-mobile is-centered">
+                        {% if google %}
+                            <div class="column">
+                                <a class="button"
+                                   href="{% url "social:begin" "google-oauth2" %}?next={{ request.path }}">Login with
+                                    Google+</a>
+                            </div>
+                        {% endif %}
+                        {% if twitter %}
+                            <div class="column">
+                                <a class="button" href="{% url 'social:begin' 'twitter' %}?next={{ request.path }}">Login
+                                    with Twitter</a>
+                            </div>
+                        {% endif %}
+                        {% if facebook %}
+                            <div class="column">
+                                <a class="button" href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}">Login
+                                    with Facebook</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% if messages %}
+                        <div class="messages">
+                            {% for message in messages %}
+                                <div {% if message.tags %} class="{{ message.tags }} has-text-danger"{% endif %}>{{ message }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
 
 
             </div>

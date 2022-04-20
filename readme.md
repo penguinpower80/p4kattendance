@@ -5,7 +5,7 @@ This project will be a student attendance tracking for partnership 4 kids.
 - Clone the repo from GitHub
   - Make sure your product has a valid venv set up for python 3.8 or later.
 - install requirements: `pip install -r requirements.txt`
-- copy the file called `env.sample` to a file called `.env` (or just rename it)
+- **copy** the file called `env.sample` to a file called `.env`
   - Add the appropriate settings values.
   
 ### Initial Setup

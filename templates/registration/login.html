@@ -20,16 +20,21 @@
                 <hr />
                 <div>
         <div class="columns is-mobile is-centered">
+            {% if google %}
             <div class="column">
-                {% if google %}
-                    <a class="button" href="{% url "social:begin" "google-oauth2" %}">Google+</a>
-                {% endif %}
+                    <a class="button" href="{% url "social:begin" "google-oauth2" %}?next={{ request.path }}">Login with Google+</a>
             </div>
+            {% endif %}
+            {% if twitter %}
             <div class="column">
-                {% if twitter %}
-                    <a class="button" href="{% url "social:begin" "twitter-oauth" %}">Twitter</a>
-                {% endif %}
+                    <a class="button" href="{% url 'social:begin' 'twitter' %}?next={{ request.path }}">Login with Twitter</a>
             </div>
+            {% endif %}
+             {% if facebook %}
+            <div class="column">
+                    <a class="button" href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}">Login with Facebook</a>
+            </div>
+            {% endif %}
         </div>
     </div>
 

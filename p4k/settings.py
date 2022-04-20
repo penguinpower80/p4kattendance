@@ -30,7 +30,7 @@ LOGIN_ERROR_URL='/'
 SECRET_KEY = config('SECRET_KEY', default='---')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=False)
+DEBUG = config('DEBUG', default='False') == 'True'
 
 ALLOWED_HOSTS = ['*']
 

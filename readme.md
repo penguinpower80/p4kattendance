@@ -8,6 +8,7 @@ This project will be a student attendance tracking for partnership 4 kids.
 - **copy** the file called `env.sample` to a file called `.env`
   - Add the appropriate settings values.
   
+
 ### Initial Setup
 *YOU CAN ALSO RUN THIS TO START OVER!!*
 - First, run `python manage.py setup` 

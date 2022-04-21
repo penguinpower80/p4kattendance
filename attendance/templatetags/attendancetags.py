@@ -5,10 +5,17 @@ from os import path
 from decouple import config
 from django import template
 from django.conf import settings
+from django.utils.safestring import mark_safe
 
 from attendance.utility import isAssigned
 
 register = template.Library()
+
+@register.simple_tag(takes_context=True)
+def logged_in_as(context):
+    if context.request.user.is_anonymous:
+        return ''
+    return mark_safe('<div>Logged in as: {}</div>'.format( context.request.user.email ))
 
 
 @register.simple_tag()

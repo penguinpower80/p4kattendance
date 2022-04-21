@@ -210,4 +210,5 @@ SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 
 
 if HOSTING == 'HEROKU':
+    CKEDITOR_BASEPATH = "/staticfiles/ckeditor/ckeditor/"
     django_heroku.settings(locals())

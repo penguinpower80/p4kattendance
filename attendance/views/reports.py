@@ -1,6 +1,8 @@
 import datetime
 
-from attendance.models import AssignmentTypes, Classroom, Student, School
+from django.contrib.auth.decorators import login_required
+
+from attendance.models import AssignmentTypes, Classroom, Student, School, Notes
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponse, JsonResponse
 from django.utils.dateparse import parse_datetime, parse_date
@@ -8,6 +10,14 @@ from django.utils.dateparse import parse_datetime, parse_date
 from attendance.utility import is_facilitator, is_mentor
 from attendance.utility.reports import sendNotesReport, sendStudentsReport
 
+@login_required
+def reports(request):
+    notes = Notes.objects.all()
+    students = Student.objects.all()
+    return render(request, 'attendance/reports.html', {
+        'notes': notes,
+        'student': students,
+    })
 
 def sendReport(request, report_type:str = 'notes'):
     '''

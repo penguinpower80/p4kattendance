@@ -1,0 +1,18 @@
+{% extends "base_report.html" %}
+{% load attendancetags %}
+{% block title %}Notes Report - {{ title }}{% endblock %}
+{% block daterange %}
+    {% attendance_date start %} - {% attendance_date end %}
+{% endblock %}
+{% block sub-title %}{{ subtitle }}{% endblock %}
+{% block content %}
+    <div class="notecontainer">
+    {% if notes %}
+        {% for note in notes %}
+        {% include 'partials/reports/note.html' with note=note only %}
+        {% endfor %}
+    {% else %}
+        No Notes
+    {% endif %}
+    </div>
+{% endblock %}

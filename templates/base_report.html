@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        h1, h3 {
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+
+        .notecontainer {
+            margin:0 auto;
+            max-width: 650px;
+        }
+
+        .note {
+            border-bottom: 1px solid black;
+            margin-bottom: 5px;
+        }
+        .noteheader {
+            background-color: black;
+            color: white;
+            padding: 10px 5px;
+        }
+        .notebody {
+            padding-left:10px;
+            padding-right:10px;
+        }
+        .notefooter {
+            background-color: #e3e3e3;
+            padding: 10px 5px;
+        }
+        .notefooter > div {
+            width: 49%;
+            display:inline-block;
+        }
+        .notefooter > div.right {
+            text-align:right;
+        }
+
+        .classroom h3 {
+            background-color: black;
+            color: white;
+            padding: 10px 5px;
+        }
+
+        .classroomcontainer ul {
+            list-style:none;
+        }
+
+        .classroomcontainer ul > li {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .classroomcontainer ul > li > ul > li {
+            font-weight: normal;
+            margin: 5px;
+        }
+    </style>
+</head>
+
+<body class="">
+    <h1>{% block title %}{% endblock %}</h1>
+    <h3>{% block daterange %}{% endblock %}</h3>
+    <h3>{% block sub-title %}{% endblock %}</h3>
+    <div>
+        {% block content %}{% endblock %}
+    </div>
+</body>

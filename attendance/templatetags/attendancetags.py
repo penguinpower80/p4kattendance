@@ -7,7 +7,8 @@ from django import template
 from django.conf import settings
 from django.utils.safestring import mark_safe
 
-from attendance.utility import isAssigned
+from attendance.models import Assignments
+from attendance.utility import isAssigned, is_mentor
 
 register = template.Library()
 
@@ -74,6 +75,23 @@ def getkey(value, arg):
     return value[arg]
 
 @register.simple_tag()
+def assigned_to(type, id, text="<li>No one</li>"):
+    try:
+        assignments = Assignments.objects.filter(type=type, tid=id).all()
+    except Assignments.DoesNotExist as e:
+        return mark_safe(text)
+
+    if assignments.count() == 0:
+        return mark_safe(text)
+
+    user_list = ''
+    for assignment in assignments:
+        user_list += "<li>{} ({})</li>".format( assignment.user.get_full_name(), 'Mentor' if is_mentor(assignment.user) else 'Facilitator' )
+
+    return mark_safe(user_list)
+
+
+@register.simple_tag()
 def isassigned(type, id, assignments, text="None"):
     if assignments.filter(type=type, tid=id).count() > 0:
         return text
@@ -93,3 +111,9 @@ def has_attendance_of(set, student, type, text=' is-primary'):
 @register.filter(name='has_group')
 def has_group(user, group_name):
     return user.groups.filter(name=group_name).exists()
+
+@register.simple_tag()
+def attendance_date(date):
+    if date is None:
+        return ''
+    return date.strftime('%m/%d/%Y')

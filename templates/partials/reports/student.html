@@ -1,0 +1,7 @@
+{% load attendancetags %}
+<li class="student">
+    {{ student }}
+    <ul class="student_assignments">
+        {% assigned_to 'P' student.nde_id  %}
+    </ul>
+</li>

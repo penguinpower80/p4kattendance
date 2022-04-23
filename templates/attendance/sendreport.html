@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load attendancetags %}
+{% block title %}Send Report{% endblock %}
+{% block content %}
+    <h2>Send Report: {{ report_type|capfirst }}</h2>
+    <div class="columns">
+        <div class="column has-text-centered">
+            {{ school.name }}
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column has-text-centered">
+            {% attendance_date start %} - {% attendance_date end %}
+        </div>
+    </div>
+    <form method="post">
+    {% csrf_token %}
+        <input type="text" name="start" value="{{ start|date:"m/d/Y" }}" />
+        <input type="text" name="end" value="{{ end|date:"m/d/Y" }}" />
+        <input type="text" name="entity_type" value="{{ entity_type }}" />
+        <input type="text" name="entity_id" value="{{ entity_id }}" />
+        <div class="columns">
+            <div class="column has-text-centered is-4 is-offset-4">
+                <div class="field">
+                    <p class="control has-icons-left has-icons-right">
+                        <input class="input" type="email" placeholder="Email" name="email" required>
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-envelope"></i>
+                        </span>
+                        <span class="icon is-small is-right">
+                            <i class="fas fa-check"></i>
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    <div class="columns">
+        <div class="column has-text-centered">
+            <button class="button is-medium is-primary is-outlined" name="sendreport" value="1">
+                <span class="icon is-medium">
+                  <i class="fas fa-paper-plane"></i>
+                </span>
+                <span>Send</span>
+            </button>
+        </div>
+    </div>
+</form>
+{% endblock %}

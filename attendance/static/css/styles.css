@@ -29,6 +29,20 @@ html, body {
     overflow: auto;
 }
 
+.studententry {
+    padding: 10px;
+    padding-bottom:10px;
+
+}
+
+.studententry:nth-child(even) {
+    background-color: #efefef;
+}
+
+.meetinglistholder {
+    margin-top:10px;
+}
+
 ul.meetinglist {
     list-style:none;
     padding:0;

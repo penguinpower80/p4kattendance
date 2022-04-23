@@ -4,7 +4,7 @@
             <label>
 			    <input class="schoolcheckbox" type="checkbox" name="school[]" value="{{ school.id }}" {% isassigned 'S' school.id assignments "checked" %} /> {{ school.name }}
             </label>
-                <a href="#school-{{ school.id }}" data-action="collapse">Collapse/Expand</a>
+            {% include 'partials/toggle_button.html' with type="school" id=school.id only %}
 		</div>
 		<div id="school-{{ school.id }}" class="message-body collapsed">
 			<div class="message-body-content">

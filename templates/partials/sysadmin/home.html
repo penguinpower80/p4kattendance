@@ -3,12 +3,15 @@
         <a class="box has-text-centered" href='{% url "attendance:users" %}'>
             USERS
         </a>
-        <a class="box has-text-centered" href="{% url "attendance:import" %}">
-            IMPORT
-        </a>
+    </div>
+    <div class="column">
         <a class="box has-text-centered" href='{% url "attendance:assignments" %}'>
             ASSIGNMENTS
         </a>
     </div>
-    <div class="column is-four-fifths"></div>
+    <div class="column">
+        <a class="box has-text-centered" href="{% url "attendance:import" %}">
+            IMPORT
+        </a>
+    </div>
 </div>

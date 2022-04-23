@@ -98,8 +98,13 @@ def meetinglist(request, entity, entity_id):
         classroom = student.classroom
 
     meetings = meetingsFor(request.user, entity, entity_id, True)
+
     if meetings is None:
         return JsonResponse({})
+
+    for meeting in meetings:
+        meeting['formatted'] = meeting['date'].strftime('%b %-d, %Y')
+
     return JsonResponse(meetings, safe=False)
 
 

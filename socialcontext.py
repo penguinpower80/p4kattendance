@@ -1,7 +1,3 @@
-import logging
-from django.contrib import messages
-
-
 from decouple import config
 
 def socialproviders(request):

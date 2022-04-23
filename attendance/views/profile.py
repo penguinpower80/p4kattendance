@@ -1,6 +1,8 @@
+from decouple import config
 from django.contrib.auth.decorators import login_required
-from social_django.models import UserSocialAuth
 from django.shortcuts import render
+from social_django.models import UserSocialAuth
+
 
 # Adapted mostly from here: https://simpleisbetterthancomplex.com/tutorial/2016/10/24/how-to-add-social-login-to-django.html
 
@@ -9,7 +11,14 @@ from django.shortcuts import render
 def profile(request):
     user = request.user
 
+    google_configured = config('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY', default='') != '' and config(
+        'SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET', default='') != ''
 
+    twitter_configured = config('SOCIAL_AUTH_TWITTER_KEY', default='') != '' and config('SOCIAL_AUTH_TWITTER_SECRET',
+                                                                                        default='') != ''
+
+    facebook_configured = config('SOCIAL_AUTH_FACEBOOK_KEY', default='') != '' and config('SOCIAL_AUTH_FACEBOOK_SECRET',
+                                                                                          default='') != ''
 
     try:
         google_login = user.social_auth.get(provider='google-oauth2')
@@ -33,7 +42,6 @@ def profile(request):
 
     can_disconnect = (user.social_auth.count() > 1 or user.has_usable_password())
 
-
     return render(request, 'attendance/profile.html', {
         "user": request.user,
         'google_login': google_login,
@@ -41,8 +49,11 @@ def profile(request):
         'twitter_login': twitter_login,
         'facebook_login': facebook_login,
         'can_disconnect': can_disconnect,
+        'google': google_configured,
+        'facebook': facebook_configured,
+        'twitter': twitter_configured,
+        'has_social': (google_configured or twitter_configured or facebook_configured)
     })
-
 
 # @login_required
 # def password(request):

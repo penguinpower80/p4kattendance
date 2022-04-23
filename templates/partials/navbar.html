@@ -27,6 +27,10 @@
                         <a class="{% if request.resolver_match.url_name == "import" %}button is-outlined{% endif %}"
                            href="{% url 'attendance:import' %}">Import</a>
                     </div>
+                    <div class="navbar-item">
+                        <a class="{% if request.resolver_match.url_name == "reports" %}button is-outlined{% endif %}"
+                           href="{% url 'attendance:reports' %}">REPORT</a>
+                    </div>
                 {% endif %}
                 <div class="navbar-item">
                     <a class="profile-button {% if request.resolver_match.url_name == "profile" %}button is-outlined{% endif %}" href="{% url 'attendance:profile' %}">Profile</a>

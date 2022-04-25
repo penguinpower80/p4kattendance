@@ -4,10 +4,10 @@
 <h2>Reports</h2>
         <div class="columns">
             <div class="column">
-                <a class="box has-text-centered" href="{% url 'partials/reports/note.html' %}">
+                <a class="box has-text-centered" href="{% url 'attendance:report' report_type='notes'  %}">
                     MEETING NOTES
                 </a>
-                <a class="box has-text-centered" href="{% url 'partials/reports/student.html' %}">
+                <a class="box has-text-centered" href="{% url 'attendance:report' report_type='students'  %}">
                     STUDENT LIST
                 </a>
             </div>

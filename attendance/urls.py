@@ -24,5 +24,6 @@ urlpatterns = [
           path('ajax/updatenote/<int:note_id>', views.updatenote, name='updatenote'),
           path('profile', views.profile, name='profile'),
           path('reports', views.reports, name='reports'),
+          path('report/<str:report_type>', views.report, name='report'),
           path('reports/send/<str:report_type>', views.sendReport, name='sendreport'),
 ]

@@ -57,8 +57,15 @@ This project will be a student attendance tracking for partnership 4 kids.
   - `AWS_SECRET_ACCESS_KEY` = ''
     - The access key secret for your AWS S3 bucket
   - `AWS_STORAGE_BUCKET_NAME` = ''
-    - The AWS S3 bucket name 
-  
+    - The AWS S3 bucket name
+
+### PDF Report Generation
+In order to get the PDF report library to run, you may have to install some additional requirements as per these docs:
+https://doc.courtbouillon.org/weasyprint/stable/first_steps.html
+
+On a windows 10 machine, I found I had to edit the user PATH environment variable to put the GTK library path FIRST in the list.
+
+
 ### Social Login
 Full documentation is available here: https://python-social-auth.readthedocs.io/en/latest/configuration/django.html
 Helpful tutorial available here: https://www.bogotobogo.com/python/Django/Python-Django-OAuth2-Getting-Client-ID-Application-ID-Social-Sites-Facebook-Twitter-Google.php

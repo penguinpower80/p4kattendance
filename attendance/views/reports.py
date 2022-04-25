@@ -19,6 +19,20 @@ def reports(request):
         'student': students,
     })
 
+
+@login_required
+def report(request, report_type:str = 'notes'):
+    '''
+    Report selector. Need entity type, entity id, date range
+    '''
+    if request.method != 'POST':
+        if report_type == 'notes':
+            return render(request, 'reports/notesreportoptions.html')
+        if report_type == 'students':
+            return render(request, 'reports/studentsreportoptions.html')
+        return redirect(request.META.get('HTTP_REFERER', '/'))
+
+@login_required
 def sendReport(request, report_type:str = 'notes'):
     '''
     Send reports. Need entity type, entity id, date range

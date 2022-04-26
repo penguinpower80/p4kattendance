@@ -1,24 +1,80 @@
 {% extends "base.html" %}
 {% load attendancetags %}
-{% block title %}Send Report{% endblock %}
+{% block title %}Notes Report{% endblock %}
 {% block content %}
 
     <form method="post" action="{% url 'attendance:sendreport' report_type='notes' %}">
-    {% csrf_token %}
-        Type: <input class="input"  type="text" name="entity_type" value="student" /><br/>
-        ID: <input class="input" type="text" name="entity_id" value="2687158556" /><br/>
-        Start: <input type="text" name="start" value="01/01/2022" /><br/>
-        End: <input type="text" name="end" value="05/01/2022" /><br/>
-
-    <div class="columns">
-        <div class="column has-text-centered">
-            <button class="button is-medium is-primary is-outlined" name="sendreport">
-                <span class="icon is-medium">
-                  <i class="fas fa-paper-plane"></i>
-                </span>
-                <span>Send</span>
-            </button>
+        {% csrf_token %}
+        <div class="columns">
+            <div class="column">
+                <div class="field">
+                    <label for="notes_for">I want a notes report for a:</label>
+                    <div class="select is-small">
+                        <select id="notes_for" name="entity_type">
+                            <option value="">Select report type</option>
+                            <option value="school">school</option>
+                            <option value="classroom">classroom</option>
+                            <option value="student">student</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-</form>
+        <div class="columns">
+            <div id="school-selector-column" class="column is-hidden">
+                <div class="field">
+                    <label for="school" class="is-sr-only">School</label>
+                    <div  class="select is-fullwidth">
+                        <select id="school">
+                            <option value="">Select school</option>
+                            <option value="1">TEST</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div id="classroom-selector-column" class="column is-hidden">
+                <div class="field">
+                    <label for="classroom" class="is-sr-only">Classroom</label>
+
+                    <div class="select is-fullwidth">
+                        <select id="classroom">
+                            <option value="">Select School First</option>
+                            <option value="1">TEST</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div id="student-selector-column" class="column is-hidden">
+                <div class="field">
+                    <label for="student" class="is-sr-only">Student</label>
+                    <div  class="select is-fullwidth">
+                        <select id="student">
+                            <option value="">Select Classroom First</option>
+                            <option value="1">TEST</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                <label for="start_date">Start Date</label>
+                <input type="date" id="start_date" name="start" value="{{ start_date }}"/>
+            </div>
+            <div class="column">
+                <label for="end_date">End Date</label>
+                <input type="date" id="end_date" name="end" value="{{ end_date }}"/>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column has-text-centered">
+                <button class="button is-medium is-primary is-outlined" name="sendreport">
+            <span class="icon is-medium">
+                  <i class="fas fa-book-reader"></i>
+            </span>
+                    <span>Generate</span>
+                </button>
+            </div>
+        </div>
+    </form>
 {% endblock %}

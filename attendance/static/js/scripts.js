@@ -166,7 +166,9 @@ function getMeetingList(type, id, callback) {
  * @param callback
  */
 function deleteNote(id, callback) {
-    jQuery.get('/ajax/note/delete/' + id, function (data) {
+    jQuery.post('/ajax/note/delete/' + id, {
+        csrfmiddlewaretoken: csrftoken
+    }, function (data) {
         if (callback) callback(data)
     }).always(function () {
     }).fail(function (d) {
@@ -205,7 +207,12 @@ function getNoteList(type, id, callback) {
  * @param callback
  */
 function getSchoolList(callback) {
-    callback('scools')
+    jQuery.get('/ajax/list/schools', function (data) {
+        if (callback) callback(data)
+    }).always(function () {
+    }).fail(function (d) {
+        msg('Unable to retrieve school list; please try again later.', 'error')
+    })
 }
 
 /**
@@ -214,7 +221,12 @@ function getSchoolList(callback) {
  * @param callback
  */
 function getStudentsForClassroom(classroom, callback) {
-    callback('students')
+    jQuery.get('/ajax/list/students/' + classroom, function (data) {
+        if (callback) callback(data)
+    }).always(function () {
+    }).fail(function (d) {
+        msg('Unable to retrieve students list; please try again later.', 'error')
+    })
 }
 
 /**
@@ -223,7 +235,12 @@ function getStudentsForClassroom(classroom, callback) {
  * @param callback
  */
 function getClassroomsForSchool(school, callback) {
-    callback('Classrooms')
+    jQuery.get('/ajax/list/classrooms/' + school, function (data) {
+        if (callback) callback(data)
+    }).always(function () {
+    }).fail(function (d) {
+        msg('Unable to retrieve classroom list; pleas try again later.', 'error')
+    })
 }
 
 /**
@@ -357,17 +374,25 @@ jQuery(document).ready(function ($) {
         })
     })
 
-    $(document).on('change', '#notes_for', function(e){
+    $(document).on('change', '#notes_for', function (e) {
         let value = $(this).val()
         $('#school-selector-column, #classroom-selector-column, #student-selector-column').addClass('is-hidden')
-
-          getSchoolList(function(schools){
-                console.log(schools)
+        let $school_list = $('select#school');
+        let $class_list = $('select#classroom')
+        if (value !== '' && $('select#school option').length == 1) {
+            // Only need to do this the first time for a givenuser
+            getSchoolList(function (data) {
+                for (let x in data.schools) {
+                    $school_list.append('<option value="' + data.schools[x][0] + '">' + data.schools[x][1] + '</option>');
+                }
             })
+        }
+
+        $school_list.val('')
+        $class_list.val('')
 
         switch (value) {
             case 'school':
-
                 $('#school-selector-column').removeClass('is-hidden')
                 break;
             case 'classroom':
@@ -379,34 +404,45 @@ jQuery(document).ready(function ($) {
         }
     })
 
-    $(document).on('change', 'select#school', function(e){
+    $(document).on('change', 'select#school', function (e) {
         let notes_for = $('#notes_for').val()
         let my_value = $(this).val()
-        if ( my_value == '' ) {
+        if (my_value == '') {
             $('#classroom').html('<option value="">Select School First</option>').sel
             $('#student').html('<option value="">Select Classroom First</option>')
         }
 
+        if (notes_for === 'classroom' || notes_for === 'student') {
+            getClassroomsForSchool(my_value, function (data) {
+                let $classroom_list = $('select#classroom');
+                $classroom_list.html('<option value="">Select Classroom</option>').sel
 
-        if (  notes_for === 'classroom' || notes_for === 'student' ) {
-            getClassroomsForSchool(my_value, function(classrooms){
-                console.log(classrooms)
+                for (let x in data.classrooms) {
+                    $classroom_list.append('<option value="' + data.classrooms[x][0] + '">' + data.classrooms[x][1] + '</option>').sel
+                }
             })
         }
     })
 
-    $(document).on('change', '#classroom', function(e){
+    $(document).on('change', '#classroom', function (e) {
         let notes_for = $('#notes_for').val()
         let my_value = $(this).val()
+        let $student_list = $('select#student');
+        if (my_value == '') {
+            $student_list.html('<option value="">Select Classroom First</option>')
+        } else {
+            if (notes_for === 'student') {
+                getStudentsForClassroom(my_value, function (data) {
+                    $student_list.html('<option value="">Select Student</option>').sel
+                    for (let x in data.students) {
+                        $student_list.append('<option value="' + data.students[x][0] + '">' +
+                            data.students[x][1] + ' ' + data.students[x][2] + ' (' + data.students[x][0] + ')</option>').sel
+                    }
+                })
+            }
 
-        if ( my_value == '' ) {
-            $('#student').html('<option value="">Select Classroom First</option>')
         }
-        if (  notes_for === 'student' ) {
-            getStudentsForClassroom(my_value, function(students){
-                console.log(students)
-            })
-        }
+
     })
 })
 
@@ -522,7 +558,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         let thisNote = d.notes[note]
                         let clone = template.content.cloneNode(true)
                         clone.querySelectorAll('.card-header-title')[0].textContent = thisNote.author + ', ' + thisNote.created
-                        if ( thisNote.created != thisNote.updated ) {
+                        if (thisNote.created != thisNote.updated) {
                             clone.querySelectorAll('.extranoteinfo')[0].textContent = "(updated " + thisNote.updated + ")";
                         }
 

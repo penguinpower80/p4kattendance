@@ -8,7 +8,8 @@ from django.http import HttpResponse, JsonResponse
 from django.utils.dateparse import parse_datetime, parse_date
 
 from attendance.utility import is_facilitator, is_mentor
-from attendance.utility.reports import sendNotesReport, sendStudentsReport
+from attendance.utility.reports import sendNotesReport, sendStudentsReport, generateNotesReport
+
 
 @login_required
 def reports(request):
@@ -21,19 +22,20 @@ def reports(request):
 
 
 @login_required
-def report(request, report_type:str = 'notes'):
+def report(request, report_type: str = 'notes'):
     '''
     Report selector. Need entity type, entity id, date range
     '''
     if request.method != 'POST':
         if report_type == 'notes':
-            return render(request, 'reports/notesreportoptions.html')
+            return render(request, 'reports/../../templates/attendance/notesreportoptions.html')
         if report_type == 'students':
-            return render(request, 'reports/studentsreportoptions.html')
+            return render(request, 'reports/../../templates/attendance/studentsreportoptions.html')
         return redirect(request.META.get('HTTP_REFERER', '/'))
 
+
 @login_required
-def sendReport(request, report_type:str = 'notes'):
+def sendReport(request, report_type: str = 'notes'):
     '''
     Send reports. Need entity type, entity id, date range
     '''
@@ -41,12 +43,10 @@ def sendReport(request, report_type:str = 'notes'):
         return render(request, 'attendance/sendreporttest.html')
         return redirect(request.META.get('HTTP_REFERER', '/'))
 
-
     entity = request.POST.get('entity_type')
-    entity_id = request.POST.get('entity_id')
     try:
-        start_date = datetime.datetime.strptime( request.POST.get('start', ''), '%m/%d/%Y' )
-        end_date = datetime.datetime.strptime( request.POST.get('end', ''), '%m/%d/%Y' )
+        start_date = datetime.datetime.strptime(request.POST.get('start', ''), '%m/%d/%Y')
+        end_date = datetime.datetime.strptime(request.POST.get('end', ''), '%m/%d/%Y')
     except Exception as e:
         return render(request, 'attendance/sendreporttest.html', {'message': 'Invalid Date'})
 
@@ -56,32 +56,34 @@ def sendReport(request, report_type:str = 'notes'):
         start_date = end_date
         end_date = temp
 
-
-
     if entity == 'school':
+        entity_id = request.POST.get('school_id')
         school = get_object_or_404(School, pk=entity_id)
     elif entity == 'classroom':
+        entity_id = request.POST.get('classroom_id')
         classroom = get_object_or_404(Classroom, pk=entity_id)
         school = classroom.school
     elif entity == 'student':
+        entity_id = request.POST.get('student_id')
         student = get_object_or_404(Student, pk=entity_id)
         school = student.classroom.school
     else:
-        return render(request, 'attendance/sendreporttest.html', {'message': 'Invalid Entity Type'})
+        return render(request, 'attendance/sendreport.html', {'message': 'Invalid Entity Type'})
 
-    message=''
+    message = ''
 
-    if ( request.POST.get('sendreport', '') == '1'):
-        print( 'need to send' )
+    if (request.POST.get('sendreport', '') == '1'):
         email = request.POST.get('email')
         if report_type == 'notes':
-            sendNotesReport(request.user, email, entity, entity_id, start_date, end_date, is_facilitator(request.user) )
+            sendNotesReport(request.user, email, entity, entity_id, start_date, end_date, is_facilitator(request.user))
             message = "Notes report sent to {}".format(email)
         if report_type == 'students':
             sendStudentsReport(request.user, email, entity, entity_id)
             message = "Student report sent to {}".format(email)
 
+    show_all = is_facilitator(request.user) or request.user.is_superuser
 
+    report = generateNotesReport(entity, entity_id, start_date, end_date, show_all, 'html')
     return render(request, 'attendance/sendreport.html', {
         'report_type': report_type,
         'school': school,
@@ -89,5 +91,6 @@ def sendReport(request, report_type:str = 'notes'):
         'end': end_date,
         'entity_type': entity,
         'entity_id': entity_id,
-        'message': message
+        'message': message,
+        'report': report
     })

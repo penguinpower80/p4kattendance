@@ -1,0 +1,11 @@
+<div class="notecontainer">
+    {% if notes %}
+        {% for note in notes %}
+            {% include 'partials/reports/note.html' with note=note only %}
+        {% endfor %}
+    {% else %}
+        <center>
+        No Notes
+        </center>
+    {% endif %}
+</div>

@@ -6,13 +6,5 @@
 {% endblock %}
 {% block sub-title %}{{ subtitle }}{% endblock %}
 {% block content %}
-    <div class="notecontainer">
-    {% if notes %}
-        {% for note in notes %}
-        {% include 'partials/reports/note.html' with note=note only %}
-        {% endfor %}
-    {% else %}
-        No Notes
-    {% endif %}
-    </div>
+    {% include 'reports/notes_html.html' %}
 {% endblock %}

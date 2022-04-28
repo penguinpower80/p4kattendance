@@ -11,6 +11,30 @@ from social_django.models import UserSocialAuth
 def profile(request):
     user = request.user
 
+
+    if request.method == 'POST':
+
+        errors = []
+        post_data = request.POST
+        if post_data['first_name']:
+            user.first_name = post_data['first_name']
+        else:
+            errors.append('Please provide a first name.')
+
+        if request.POST['last_name']:
+            user.last_name = request.POST['last_name']
+        else:
+            errors.append('Please provide a last name.')
+
+        if request.POST['email']:
+            user.email = request.POST['email']
+        else:
+            errors.append('Please provide an email.')
+
+        if len(errors) == 0:
+            user.save()
+
+
     google_configured = config('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY', default='') != '' and config(
         'SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET', default='') != ''
 
@@ -43,7 +67,7 @@ def profile(request):
     can_disconnect = (user.social_auth.count() > 1 or user.has_usable_password())
 
     return render(request, 'attendance/profile.html', {
-        "user": request.user,
+        "user": user,
         'google_login': google_login,
         'linkedin_login': linkedin_login,
         'twitter_login': twitter_login,

@@ -203,22 +203,22 @@ def schoollist(request):
         # We also need the classrooms and students to include in the list
         classrooms_assigned = assignmentsFor(request.user, AssignmentTypes.CLASSROOM)
         students_assigned = assignmentsFor(request.user, AssignmentTypes.STUDENT)
-        if schools_assigned.count() == 0:
-            return JsonResponse({})
-        else:
-            school_ids = [s.tid for s in schools_assigned]
-            if ( classrooms_assigned.count() > 0 ):
-                classroom_ids = [c.tid for c in classrooms_assigned]
-                classrooms = Classroom.objects.filter(id__in=classroom_ids)
-                for classroom in classrooms:
-                    school_ids.append(classroom.school_id)
-            if ( students_assigned.count() > 0 ):
-                student_ids = [c.tid for c in students_assigned]
-                students = Student.objects.filter(nde_id__in=student_ids)
-                for student in students:
-                    school_ids.append(student.classroom.school_id)
 
-            schools = list(School.objects.filter(id__in=school_ids).values_list('id','name').order_by('name'))
+        school_ids = [s.tid for s in schools_assigned]
+        if ( classrooms_assigned.count() > 0 ):
+            classroom_ids = [c.tid for c in classrooms_assigned]
+            classrooms = Classroom.objects.filter(id__in=classroom_ids)
+            for classroom in classrooms:
+                school_ids.append(classroom.school_id)
+        if ( students_assigned.count() > 0 ):
+            student_ids = [c.tid for c in students_assigned]
+            students = Student.objects.filter(nde_id__in=student_ids)
+            print(students)
+            for student in students:
+                print(student.classroom.school_id)
+                school_ids.append(student.classroom.school_id)
+
+        schools = list(School.objects.filter(id__in=school_ids).values_list('id','name').order_by('name'))
 
     return JsonResponse({'schools': schools})
 
@@ -235,18 +235,15 @@ def classroomlist(request, school_id):
         # also need classrooms with students
         students_assigned = assignmentsFor(request.user, AssignmentTypes.STUDENT)
 
-        if classroom_assigned.count() == 0:
-            return JsonResponse({})
-        else:
-            classroom_ids = [s.tid for s in classroom_assigned]
+        classroom_ids = [s.tid for s in classroom_assigned]
 
-            if ( students_assigned.count() > 0 ):
-                student_ids = [c.tid for c in students_assigned]
-                students = Student.objects.filter(nde_id__in=student_ids)
-                for student in students:
-                    classroom_ids.append(student.classroom.id)
+        if ( students_assigned.count() > 0 ):
+            student_ids = [c.tid for c in students_assigned]
+            students = Student.objects.filter(nde_id__in=student_ids)
+            for student in students:
+                classroom_ids.append(student.classroom.id)
 
-            classrooms = list(Classroom.objects.filter(school=school).filter(id__in=classroom_ids).values_list('id','name'))
+        classrooms = list(Classroom.objects.filter(school=school).filter(id__in=classroom_ids).values_list('id','name'))
 
     return JsonResponse({'classrooms': classrooms})
 
@@ -263,6 +260,6 @@ def studentlist(request, classroom_id):
             return JsonResponse({})
         else:
             student_ids = [s.tid for s in students_assigned]
-            students = list(Classroom.objects.filter(classroom=classroom).filter(ndeid__in=student_ids).values_list('nde_id', 'first_name', 'last_name'))
+            students = list(Student.objects.filter(classroom=classroom).filter(nde_id__in=student_ids).values_list('nde_id', 'first_name', 'last_name'))
 
     return JsonResponse({'students': students})

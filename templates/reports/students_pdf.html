@@ -1,0 +1,6 @@
+{% extends "base_report.html" %}
+{% load attendancetags %}
+{% block title %}Students Report - {{ title }}{% endblock %}
+{% block content %}
+    {% include 'reports/students_html.html' %}
+{% endblock %}

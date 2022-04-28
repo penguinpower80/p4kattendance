@@ -176,11 +176,11 @@ def meetingsFor(user, entity=None, entity_id=None, includeStudents=False):
     return None
 
 
-def getRedirectWithParam(message, location='attendance:home'):
+def getRedirectWithParam(message, location='attendance:home', kwargs=None):
     '''
     Utility function to add a message to a url location and send back a redirect
     '''
-    base_url = reverse(location)
+    base_url = reverse(location, kwargs=kwargs)
     url = '{}?msg={}'.format(base_url, message)
     return redirect(url)
 

@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 {% load attendancetags %}
-{% block title %}Notes Report{% endblock %}
+{% block title %}Report Options{% endblock %}
 {% block content %}
-
-    <form method="post" action="{% url 'attendance:sendreport' report_type='notes' %}">
+    <h1>{{ report_type|title }}</h1>
+    <form method="post" action="{% url 'attendance:sendreport' report_type=report_type %}">
         {% csrf_token %}
         <div class="columns">
             <div class="column">
                 <div class="field">
-                    <label for="notes_for">I want a notes report for a:</label>
+                    <label for="notes_for">I want a report for a:</label>
                     <div class="select is-small">
                         <select id="notes_for" name="entity_type">
                             <option value="">Select report type</option>
@@ -48,7 +48,6 @@
                     <div  class="select is-fullwidth">
                         <select id="student" name="student_id">
                             <option value="">Select Classroom First</option>
-                            <option value="1">TEST</option>
                         </select>
                     </div>
                 </div>

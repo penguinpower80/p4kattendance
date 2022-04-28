@@ -1,0 +1,23 @@
+<div class="classroomcontainer">
+    {% if classrooms %}
+        {% for classroom in classrooms %}
+            <div class="classroom">
+                <h3>{{ classroom.name }}</h3>
+                <ul>
+                {% if student %}
+                    {% include 'partials/reports/student_attendance.html' with student=student start_date=start_date end_date=end_date only %}
+                {% else %}
+
+                    {% for student in classroom.student_set.all %}
+                        {% include 'partials/reports/student_attendance.html' with student=student start_date=start_date end_date=end_date only %}
+                    {% endfor %}
+                {% endif %}
+                </ul>
+            </div>
+        {% endfor %}
+    {% else %}
+        <center>
+        No Students
+        </center>
+    {% endif %}
+</div>

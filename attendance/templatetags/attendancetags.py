@@ -1,5 +1,4 @@
-import logging
-from datetime import datetime
+import datetime
 from os import path
 
 from decouple import config
@@ -7,7 +6,7 @@ from django import template
 from django.conf import settings
 from django.utils.safestring import mark_safe
 
-from attendance.models import Assignments
+from attendance.models import Assignments, Meeting, Attendance
 from attendance.utility import isAssigned, is_mentor
 
 register = template.Library()
@@ -116,4 +115,25 @@ def has_group(user, group_name):
 def attendance_date(date):
     if date is None:
         return ''
-    return date.strftime('%m/%d/%Y')
+    try:
+        this_date = date.strftime('%m/%d/%Y')
+        return this_date
+    except AttributeError:
+        return '-'
+
+@register.simple_tag()
+def attendance(id, start, end):
+
+    delta = datetime.timedelta(days=1)
+    str = ''
+
+    meetings = Meeting.objects.filter(date__range=(start,end), type='P').all()
+    if meetings.count() == 0:
+        return mark_safe('<li>No meetings recorded.</li>')
+    attendances = Attendance.objects.filter(student_id=id, meeting_id__in=meetings)
+    if attendances.count() == 0:
+        return mark_safe('<li>No attendance recorded.</li>')
+    print(attendances)
+    for attendance in attendances:
+        str += "<li>" + attendance.meeting.date.strftime('%m/%d/%Y') + " - " + attendance.get_status_display() + "</li>"
+    return mark_safe(str)

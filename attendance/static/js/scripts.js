@@ -266,10 +266,10 @@ jQuery(document).ready(function ($) {
     if (calendars && calendars[0]) {
         calendars[0].on('select', date => {
             let meeting_id = date.data.element.dataset['meeting']
-            setMeetingDate(meeting_id, date.data.value(), function (d) {
-
-
-            })
+            if (meeting_id) {
+                setMeetingDate(meeting_id, date.data.value(), function (d) {
+                })
+            }
 
 
         });

@@ -213,9 +213,7 @@ def schoollist(request):
         if ( students_assigned.count() > 0 ):
             student_ids = [c.tid for c in students_assigned]
             students = Student.objects.filter(nde_id__in=student_ids)
-            print(students)
             for student in students:
-                print(student.classroom.school_id)
                 school_ids.append(student.classroom.school_id)
 
         schools = list(School.objects.filter(id__in=school_ids).values_list('id','name').order_by('name'))

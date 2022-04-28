@@ -34,7 +34,7 @@ def generateNotesReport(entity, entity_id, start_date, end_date, show_all, view=
         raise Exception('Invalid report entity.')
 
     try:
-        notes = Notes.objects.filter(type=type).filter(tid=entity_id).order_by('-created_at').all()
+        notes = Notes.objects.filter(type=type, tid=entity_id,created_at__range=(start_date, end_date)).order_by('-created_at').all()
         if not show_all:
             notes = notes.filter(visible=True)
     except Notes.DoesNotExist as e:

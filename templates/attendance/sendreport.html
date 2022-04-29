@@ -2,7 +2,14 @@
 {% load attendancetags %}
 {% block title %}Send Report{% endblock %}
 {% block content %}
-    <h2>Report: {{ report_type|capfirst }}</h2>
+    <div class="columns">
+        <div class="column">
+            <h2>Report: {{ report_type|capfirst }}</h2>
+        </div>
+        <div class="column has-text-right">
+            <button type="button" class="button is-secondary" onclick="history.back()">Back</button>
+        </div>
+    </div>
     <div class="columns">
         <div class="column has-text-centered">
             {{ title }}
@@ -45,7 +52,7 @@
     </form>
     {% if report %}
         <div class="htmlreport">
-        {{  report  }}
+            {{ report }}
         </div>
     {% endif %}
 {% endblock %}

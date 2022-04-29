@@ -3,7 +3,7 @@
 {% block title %}Report Options{% endblock %}
 {% block content %}
     <h1>{{ report_type|title }}</h1>
-    <form method="post" action="{% url 'attendance:sendreport' report_type=report_type %}">
+    <form method="post" action="{% url 'attendance:sendreport' report_type=report_type %}" autocomplete="off">
         {% csrf_token %}
         <div class="columns">
             <div class="column">

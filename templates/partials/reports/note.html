@@ -1,6 +1,6 @@
 {% load attendancetags %}
-<div class="note">
-    <div class="noteheader">
+<div class="note card">
+    <div class="card-header noteheader has-background-primary">
         {{ note.author.first_name }} {{ note.author.last_name }}
         {% if note.author|has_group:"Facilitators" %}
             (Facilitator)
@@ -11,7 +11,7 @@
     <div class="notebody">
         {{ note.text|safe }}
     </div>
-    <div class="notefooter">
+    <div class="notefooter has-background-light">
         <div class="left">
         Created: {{ note.created_at }}
         </div>

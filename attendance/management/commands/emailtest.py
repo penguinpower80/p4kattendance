@@ -17,7 +17,6 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        print(options)
 
         if options['to'] and options['from']:
             self.stdout.write('Sending test email to {} from {}'.format( options['to'], options['from']) )

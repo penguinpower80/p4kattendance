@@ -23,15 +23,14 @@ class Command(BaseCommand):
 
         user = User.objects.get(pk=options['userid'])
 
-        match options['type']:
-            case 'P':
-                student = get_object_or_404(Student, pk=options['id'])
-            case 'C':
-                classroom = get_object_or_404(Classroom, pk=options['id'])
-            case 'S':
-                school = get_object_or_404(School, pk=options['id'])
-            case _:
-                raise ValueError('Invalid Type. Must be one of S, C, or P')
+        if options['type'] == 'P':
+            student = get_object_or_404(Student, pk=options['id'])
+        elif options['type'] == 'C':
+            classroom = get_object_or_404(Classroom, pk=options['id'])
+        elif options['type'] == 'S':
+            school = get_object_or_404(School, pk=options['id'])
+        else:
+            raise ValueError('Invalid Type. Must be one of S, C, or P')
 
 
         for dt in options['datetime']:

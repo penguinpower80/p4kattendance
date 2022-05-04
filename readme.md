@@ -119,5 +119,14 @@ If they key/secret are not filled in, then the option will not show up in the lo
 
 ## Resources
 
+- Styling:
+  - https://bulma.io/
+
 - Date Picker:
   - https://bulma-calendar.onrender.com/
+
+- Icons
+  - https://fontawesome.com/
+
+- List of Schools:
+  - https://nep.education.ne.gov/

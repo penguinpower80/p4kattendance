@@ -16,6 +16,11 @@ const buttonClass = {
     cancelButton: 'button is-danger'
 }
 
+/**
+ * Display toast message
+ * @param text
+ * @param type
+ */
 function msg(text, type) {
     if (typeof type == 'undefined') type = 'success'
     Toast.fire({
@@ -24,12 +29,21 @@ function msg(text, type) {
     })
 }
 
+/**
+ * Hide on page message
+ */
 function removeMessage() {
     $('.systemmessage').slideUp(350, function () {
         $(this).remove();
     })
 }
 
+/**
+ * Update the meeting date via an ajax call
+ * @param meeting
+ * @param timestamp
+ * @param callback
+ */
 function setMeetingDate(meeting, timestamp, callback) {
     jQuery.post('/ajax/setmeetingdate/' + meeting, {
         timestamp: timestamp,
@@ -47,6 +61,13 @@ function setMeetingDate(meeting, timestamp, callback) {
     })
 }
 
+/**
+ * Mark a student's attednace via na ajax call
+ * @param meeting
+ * @param student
+ * @param status
+ * @param callback
+ */
 function markStudentAttendance(meeting, student, status, callback) {
     jQuery.post('/ajax/markattendance/' + meeting + '/' + student, {
         status: status,
@@ -64,6 +85,14 @@ function markStudentAttendance(meeting, student, status, callback) {
     })
 }
 
+/**
+ * Save a note for a particular entity via an ajax call
+ * @param entity
+ * @param id
+ * @param visible
+ * @param note
+ * @param callback
+ */
 function saveNote(entity, id, visible, note, callback) {
     jQuery.post('/ajax/savenote/' + entity + '/' + id, {
         text: note,
@@ -84,6 +113,13 @@ function saveNote(entity, id, visible, note, callback) {
     })
 }
 
+/**
+ * Update a note via an ajax call
+ * @param id
+ * @param visible
+ * @param note
+ * @param callback
+ */
 function updateNote(id, visible, note, callback) {
     jQuery.post('/ajax/updatenote/' + id, {
         text: note,
@@ -104,6 +140,12 @@ function updateNote(id, visible, note, callback) {
     })
 }
 
+/**
+ * Get a list of meetings for a particular entity type
+ * @param type
+ * @param id
+ * @param callback
+ */
 function getMeetingList(type, id, callback) {
     jQuery.get('/ajax/meetinglist/' + type + '/' + id, function (data) {
         if (callback) callback(data)
@@ -118,9 +160,15 @@ function getMeetingList(type, id, callback) {
     })
 }
 
-
+/**
+ * Delete a note via an ajax call
+ * @param id
+ * @param callback
+ */
 function deleteNote(id, callback) {
-    jQuery.get('/ajax/note/delete/' + id, function (data) {
+    jQuery.post('/ajax/note/delete/' + id, {
+        csrfmiddlewaretoken: csrftoken
+    }, function (data) {
         if (callback) callback(data)
     }).always(function () {
     }).fail(function (d) {
@@ -132,6 +180,12 @@ function deleteNote(id, callback) {
     })
 }
 
+/**
+ * Get a note list for an entity via ajax
+ * @param type
+ * @param id
+ * @param callback
+ */
 function getNoteList(type, id, callback) {
     jQuery.get('/ajax/noteslist/' + type + '/' + id, function (data) {
         if (callback) callback(data)
@@ -148,7 +202,50 @@ function getNoteList(type, id, callback) {
 
 }
 
+/**
+ * TODO: cache this??
+ * @param callback
+ */
+function getSchoolList(callback) {
+    jQuery.get('/ajax/list/schools', function (data) {
+        if (callback) callback(data)
+    }).always(function () {
+    }).fail(function (d) {
+        msg('Unable to retrieve school list; please try again later.', 'error')
+    })
+}
 
+/**
+ * TODO: Cache this??
+ * @param classroom
+ * @param callback
+ */
+function getStudentsForClassroom(classroom, callback) {
+    jQuery.get('/ajax/list/students/' + classroom, function (data) {
+        if (callback) callback(data)
+    }).always(function () {
+    }).fail(function (d) {
+        msg('Unable to retrieve students list; please try again later.', 'error')
+    })
+}
+
+/**
+ * TODO: cache this?
+ * @param school
+ * @param callback
+ */
+function getClassroomsForSchool(school, callback) {
+    jQuery.get('/ajax/list/classrooms/' + school, function (data) {
+        if (callback) callback(data)
+    }).always(function () {
+    }).fail(function (d) {
+        msg('Unable to retrieve classroom list; pleas try again later.', 'error')
+    })
+}
+
+/**
+ * Bind events for UI
+ */
 jQuery(document).ready(function ($) {
     /* https://bulma.io/documentation/components/navbar/ */
     // Check for click events on the navbar burger icon
@@ -169,10 +266,10 @@ jQuery(document).ready(function ($) {
     if (calendars && calendars[0]) {
         calendars[0].on('select', date => {
             let meeting_id = date.data.element.dataset['meeting']
-            setMeetingDate(meeting_id, date.data.value(), function (d) {
-
-
-            })
+            if (meeting_id) {
+                setMeetingDate(meeting_id, date.data.value(), function (d) {
+                })
+            }
 
 
         });
@@ -275,6 +372,77 @@ jQuery(document).ready(function ($) {
                 })
             }
         })
+    })
+
+    $(document).on('change', '#notes_for', function (e) {
+        let value = $(this).val()
+        $('#school-selector-column, #classroom-selector-column, #student-selector-column').addClass('is-hidden')
+        let $school_list = $('select#school');
+        let $class_list = $('select#classroom')
+        if (value !== '' && $('select#school option').length == 1) {
+            // Only need to do this the first time for a givenuser
+            getSchoolList(function (data) {
+                for (let x in data.schools) {
+                    $school_list.append('<option value="' + data.schools[x][0] + '">' + data.schools[x][1] + '</option>');
+                }
+            })
+        }
+
+        $school_list.val('')
+        $class_list.val('')
+
+        switch (value) {
+            case 'school':
+                $('#school-selector-column').removeClass('is-hidden')
+                break;
+            case 'classroom':
+                $('#school-selector-column, #classroom-selector-column').removeClass('is-hidden')
+                break;
+            case 'student':
+                $('#school-selector-column, #classroom-selector-column, #student-selector-column').removeClass('is-hidden')
+                break;
+        }
+    })
+
+    $(document).on('change', 'select#school', function (e) {
+        let notes_for = $('#notes_for').val()
+        let my_value = $(this).val()
+        if (my_value == '') {
+            $('#classroom').html('<option value="">Select School First</option>').sel
+            $('#student').html('<option value="">Select Classroom First</option>')
+        }
+
+        if (notes_for === 'classroom' || notes_for === 'student') {
+            getClassroomsForSchool(my_value, function (data) {
+                let $classroom_list = $('select#classroom');
+                $classroom_list.html('<option value="">Select Classroom</option>').sel
+
+                for (let x in data.classrooms) {
+                    $classroom_list.append('<option value="' + data.classrooms[x][0] + '">' + data.classrooms[x][1] + '</option>').sel
+                }
+            })
+        }
+    })
+
+    $(document).on('change', '#classroom', function (e) {
+        let notes_for = $('#notes_for').val()
+        let my_value = $(this).val()
+        let $student_list = $('select#student');
+        if (my_value == '') {
+            $student_list.html('<option value="">Select Classroom First</option>')
+        } else {
+            if (notes_for === 'student') {
+                getStudentsForClassroom(my_value, function (data) {
+                    $student_list.html('<option value="">Select Student</option>').sel
+                    for (let x in data.students) {
+                        $student_list.append('<option value="' + data.students[x][0] + '">' +
+                            data.students[x][1] + ' ' + data.students[x][2] + ' (' + data.students[x][0] + ')</option>').sel
+                    }
+                })
+            }
+
+        }
+
     })
 })
 
@@ -390,7 +558,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         let thisNote = d.notes[note]
                         let clone = template.content.cloneNode(true)
                         clone.querySelectorAll('.card-header-title')[0].textContent = thisNote.author + ', ' + thisNote.created
-                        if ( thisNote.created != thisNote.updated ) {
+                        if (thisNote.created != thisNote.updated) {
                             clone.querySelectorAll('.extranoteinfo')[0].textContent = "(updated " + thisNote.updated + ")";
                         }
 

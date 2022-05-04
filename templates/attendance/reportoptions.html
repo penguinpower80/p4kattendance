@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load attendancetags %}
+{% block title %}Report Options{% endblock %}
+{% block content %}
+    <h1>{{ report_type|title }}</h1>
+    <form method="post" action="{% url 'attendance:sendreport' report_type=report_type %}" autocomplete="off">
+        {% csrf_token %}
+        <div class="columns">
+            <div class="column">
+                <div class="field">
+                    <label for="notes_for">I want a report for a:</label>
+                    <div class="select is-small">
+                        <select id="notes_for" name="entity_type">
+                            <option value="">Select report type</option>
+                            <option value="school">school</option>
+                            <option value="classroom">classroom</option>
+                            <option value="student">student</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="columns">
+            <div id="school-selector-column" class="column is-hidden">
+                <div class="field">
+                    <label for="school" class="is-sr-only">School</label>
+                    <div  class="select is-fullwidth">
+                        <select id="school" name="school_id">
+                            <option value="">Select school</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div id="classroom-selector-column" class="column is-hidden">
+                <div class="field">
+                    <label for="classroom" class="is-sr-only">Classroom</label>
+
+                    <div class="select is-fullwidth">
+                        <select id="classroom" name="classroom_id">
+                            <option value="">Select School First</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div id="student-selector-column" class="column is-hidden">
+                <div class="field">
+                    <label for="student" class="is-sr-only">Student</label>
+                    <div  class="select is-fullwidth">
+                        <select id="student" name="student_id">
+                            <option value="">Select Classroom First</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                <label for="start_date">Start Date</label>
+                <input type="date" id="start_date" name="start" value="{{ start_date }}"/>
+            </div>
+            <div class="column">
+                <label for="end_date">End Date</label>
+                <input type="date" id="end_date" name="end" value="{{ end_date }}"/>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column has-text-centered">
+                <button class="button is-medium is-primary is-outlined" name="sendreport">
+            <span class="icon is-medium">
+                  <i class="fas fa-book-reader"></i>
+            </span>
+                    <span>Generate</span>
+                </button>
+            </div>
+        </div>
+    </form>
+{% endblock %}

@@ -29,11 +29,24 @@
                     </div>
                 {% endif %}
                 <div class="navbar-item">
-                    <a class="" href="{% url 'password_change' %}">Change Password</a>
+                    <a class="{% if request.resolver_match.url_name == "reports" %}button is-outlined{% endif %}"
+                       href="{% url 'attendance:reports' %}">Report</a>
                 </div>
-                <div class="navbar-item">
-                    <a class="logout-button" href="{% url 'logout' %}">Log Out</a>
+
+                <div class="navbar-item has-dropdown is-hoverable">
+
+                    <a class="navbar-link profile-button {% if request.resolver_match.url_name == "profile" %}button is-outlined{% endif %}" href="{% url 'attendance:profile' %}">Profile</a>
+
+
+
+
+                    <div class="navbar-dropdown">
+                        <a class="navbar-item" href="{% url 'password_change' %}">Change Password</a>
+                        <a class="navbar-item logout-button" href="{% url 'logout' %}">Log Out</a>
+                    </div>
                 </div>
+
+
             {% else %}
                 <a class="navbar-item" href="{% url 'login' %}">Log In</a>
             {% endif %}

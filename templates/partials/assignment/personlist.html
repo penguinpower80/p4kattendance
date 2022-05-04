@@ -1,11 +1,11 @@
-<div class="column is-one-third-desktop">
+<div class="column">
     <h2>{{ title }}</h2>
 
     <div class="box assignmentselectorbox">
-        <div class="has-text-grey-light">Name (Assignments Count)</div>
+        <div class="has-text-grey-light">[Assignments Count] Name </div>
         {% for user in user_list %}
             <a href="{% url 'attendance:assign' user.id %}" class="button is-large is-fullwidth is-outlined is-primary mt-3 mb-3">
-                <span class="tag is-warning">{{  user.assignments_set.count }}</span>
+                <span class="tag is-warning" title="Number of entities assigned">{{  user.assignments_set.count }}</span>
                 &nbsp;
                 {{ user.get_full_name }}
 

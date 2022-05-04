@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}My Profile{% endblock %}
+{% block content %}
+    <h2>My Profile</h2>
+
+    <div class="userprofile section">
+        <form method="post">
+            {% csrf_token %}
+            <div class="columns">
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Username</label>
+                        <div class="control">
+                            <input class="input" type="text" value="{{ user.username }}" disabled>
+                        </div>
+                    </div>
+                    <div class="columns">
+                        <div class="column">
+                            <div class="field">
+                                <label class="label">First Name</label>
+                                <div class="control">
+                                    <input value="{{ user.first_name }}" class="input" type="text" placeholder="First Name"
+                                           id="first_name" name="first_name">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <div class="field">
+                                <label class="label">Last Name</label>
+                                <div class="control">
+                                    <input value="{{ user.last_name }}" class="input" type="text" placeholder="Last Name"
+                                           id="last_name" name="last_name">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Email</label>
+                        <div class="control">
+                            <input value="{{ user.email }}" class="input" type="text" placeholder="Email" id="email" name="email">
+                        </div>
+                    </div>
+
+                    <hr/>
+                    <div class="columns">
+                        <div class="column">
+                            <a href="{% url 'password_change' %}" class="button is-secondary">Change Password</a>
+
+                        </div>
+
+                    </div>
+
+                    <div class="columns">
+                        <div class="column">
+                            <div class="field">
+                                <label class="label is-sr-only" for="saveprofile">Save</label>
+                                <div class="control has-text-centered">
+                                    <button value="saveprofile" class="button is-primary" name="saveprofile" id="saveprofile">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </form>
+
+        {% if has_social %}
+            {% include 'partials/user/socialblock.html' %}
+        {% endif %}
+
+    </div>
+{% endblock %}

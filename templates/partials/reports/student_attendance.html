@@ -1,0 +1,7 @@
+{% load attendancetags %}
+<li class="student">
+    {{ student }}
+    <ul class="student_assignments">
+        {% attendance student.nde_id start_date end_date  %}
+    </ul>
+</li>

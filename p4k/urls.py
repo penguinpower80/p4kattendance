@@ -17,13 +17,15 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
+from django.template.defaulttags import url
 from django.urls import path, include
 
 urlpatterns = [
     path('', include('attendance.urls')),
     path('admin/', admin.site.urls),
+    #path('password_change/', auth_views.PasswordChangeView.as_view(template_name='registration/password_change.html'), name='password_change'),
+    path('', include('social_django.urls', namespace='social')),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('password_change/', auth_views.PasswordChangeView.as_view(template_name='registration/password_change.html'), name='password_change'),
 ]
 
 if settings.DEBUG:

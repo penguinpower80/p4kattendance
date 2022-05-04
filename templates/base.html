@@ -18,10 +18,13 @@
             integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
     <script src="{% static 'js/scripts.js' %}"></script>
     <script src="https://kit.fontawesome.com/ce599c72c4.js" crossorigin="anonymous"></script>
+    <script>window.CKEDITOR_BASEPATH = '{% static 'ckeditor/ckeditor/' %}';</script>
     <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
     <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
     <script src="{% static 'js/accordian.js' %}"></script>
     <script src="{% static 'js/bulma-calendar.js' %}"></script>
+
+
 </head>
 
 <body class="{% current_view_class %}">
@@ -80,6 +83,9 @@
             <button class="delete" aria-label="close"></button>
         </header>
         <section class="modal-card-body">
+            <div id="notedatetime">
+
+            </div>
             <div id="noteseditor">
                 {{ notesform.as_p }}
             </div>

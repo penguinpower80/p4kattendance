@@ -5,3 +5,5 @@ from .assigntest import *
 from .assignments import *
 from .meetings import *
 from .users import *
+from .profile import *
+from .reports import *

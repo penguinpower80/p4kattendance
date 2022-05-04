@@ -5,7 +5,8 @@
                 {{ school.name }}
                 <a class="note-trigger" data-type="school" data-id="{{ key }}" data-name="{{ school.name }}" data-target="notes-modal">[NOTES]</a>
             </label>
-            <a href="#school-{{ ckey }}" data-action="collapse">Collapse/Expand</a>
+            {% include 'partials/toggle_button.html' with type="school" id=ckey only %}
+
 
         </div>
         <div id="school-{{ key }}" class="message-body collapsed">
@@ -21,24 +22,28 @@
                                 {{ classroom.name }}
                                 <a class="note-trigger" data-type="classroom" data-id="{{ ckey }}" data-name="{{ classroom.name }}" data-target="notes-modal">[NOTES]</a>
                             </label>
-                            <a href="#classroom-{{ ckey }}" data-action="collapse" data-type="C" data-id="{{ ckey }}">Collapse/Expand</a>
+                            {% include 'partials/toggle_button.html' with type="classroom" id=ckey datatype="C" only %}
+
                         </div>
                         <div id="classroom-{{ ckey }}" class="message-body collapsed">
                             <div class="message-body-content">
                                 {% if classroom.assigned %}
                                     <div class="meetinglistholder">
-                                    <ul class="meetinglist" id="classroommeetings_{{ ckey }}">
-                                        <li><a class="button is-primary is-fullwidth" href="{% url "attendance:meeting" 'classroom' ckey %}">NEW MEETING</a></li>
-                                    </ul>
+                                        <ul class="meetinglist" id="classroommeetings_{{ ckey }}">
+                                            <li><a class="button is-warning is-fullwidth" href="{% url "attendance:meeting" 'classroom' ckey %}">NEW CLASSROOM MEETING</a></li>
+                                        </ul>
                                     </div>
                                 {% endif %}
                                 {% for student in classroom.students %}
-                                    <div class="">
-                                        <strong>{{ student.first_name }} {{ student.last_name }}</strong>
+                                    <div class="studententry">
+                                        <strong>
+                                            <span class="fas fa-user"></span>
+                                            {{ student.first_name }} {{ student.last_name }}
+                                        </strong>
                                         <a class="note-trigger" data-type="student" data-id="{{ student.nde_id }}" data-name="{{ student }}" data-target="notes-modal">[NOTES]</a>
                                         <div class="meetinglistholder">
                                         <ul class="meetinglist" id="studentmeetings_{{ student.nde_id }}">
-                                            <li><a class="button is-primary is-fullwidth" href="{% url "attendance:meeting" 'student' student.nde_id %}">NEW MEETING</a></li>
+                                            <li><a class="button is-primary is-fullwidth" href="{% url "attendance:meeting" 'student' student.nde_id %}">NEW STUDENT MEETING</a></li>
                                         </ul>
                                         </div>
                                     </div>
@@ -47,8 +52,6 @@
                         </div>
                     </article>
                 {% endfor %}
-
-
             </div>
         </div>
     </article>

@@ -8,6 +8,16 @@ from django.urls import reverse
 
 from attendance.models import Assignments, AssignmentTypes, School, Student, Classroom, Meeting
 
+def format_time(time):
+    try:
+        time_format = '%m/%d/%Y %-I:%M %P'
+        formatted = time.strftime(time_format)
+    except ValueError:
+        # Windows:
+        time_format = '%m/%d/%Y %#I:%M %p'
+        formatted = time.strftime(time_format)
+
+    return formatted
 
 def is_mentor(user):
     return user.groups.filter(name='Mentors').exists()
@@ -21,17 +31,15 @@ def isAssigned(user, id, type):
     return Assignments.objects.filter(user=user).filter(tid=id).filter(type=type).count() > 0
 
 
-'''
-Build the widget hierarchy for a given set of assignments
-School
-  -> Class Room
-     -> Student
-For any given classroom, we need a school
-For any given student, we need a classroom and a school
-'''
-
-
 def buildAssignmentHierarchy(query_set):
+    '''
+    Build the widget hierarchy for a given set of assignments
+    School
+      -> Class Room
+         -> Student
+    For any given classroom, we need a school
+    For any given student, we need a classroom and a school
+    '''
     hierarchy = {}
     needed_schools = []
     needed_students = []
@@ -117,14 +125,12 @@ def buildAssignmentHierarchy(query_set):
     return sorted_hierarchy
 
 
-'''
-Get the assignments for a given user. If type is set, only get that type of assignment (school, classroom, student). If 
-hierarchical is True, then generate a hierarchical list, including parent items that may NOT have been assigned but are
-needed for display purposes
-'''
-
-
 def assignmentsFor(user, entity=None, hierarchical=False):
+    '''
+    Get the assignments for a given user. If type is set, only get that type of assignment (school, classroom, student). If
+    hierarchical is True, then generate a hierarchical list, including parent items that may NOT have been assigned but are
+    needed for display purposes
+    '''
     if (entity):
         results = Assignments.objects.filter(user=user).filter(type=entity).all()
     else:
@@ -135,13 +141,11 @@ def assignmentsFor(user, entity=None, hierarchical=False):
         return results
 
 
-'''
-Retrieve all meetings for a given user, restricted to their assignments
-Based on: https://stackoverflow.com/questions/46278166/django-filter-to-check-if-both-multiple-fields-are-in-list
-'''
-
-
 def meetingsFor(user, entity=None, entity_id=None, includeStudents=False):
+    '''
+    Retrieve all meetings for a given user, restricted to their assignments
+    Based on: https://stackoverflow.com/questions/46278166/django-filter-to-check-if-both-multiple-fields-are-in-list
+    '''
     assignments = assignmentsFor(user)
     # no assignments = no meetings
     if (len(assignments) == 0):
@@ -156,7 +160,6 @@ def meetingsFor(user, entity=None, entity_id=None, includeStudents=False):
         if a.type == AssignmentTypes.STUDENT:
             assigned_students.append(a.tid)
     meetings = Meeting.objects.filter(user=user).filter(type=entity).order_by('-date')
-
 
     # this is for a specific student
     if entity == AssignmentTypes.STUDENT and entity_id is not None:
@@ -173,18 +176,22 @@ def meetingsFor(user, entity=None, entity_id=None, includeStudents=False):
     return None
 
 
-def getRedirectWithParam(message, location='attendance:home'):
-    base_url = reverse(location)
+def getRedirectWithParam(message, location='attendance:home', kwargs=None):
+    '''
+    Utility function to add a message to a url location and send back a redirect
+    '''
+    base_url = reverse(location, kwargs=kwargs)
     url = '{}?msg={}'.format(base_url, message)
     return redirect(url)
 
 
-'''
-Returns true if there is an entry in assignments linking this user with this student (either directly or through a class room or school)
-'''
+
 
 
 def userAssignedToStudent(user, student_id):
+    '''
+    Returns true if there is an entry in assignments linking this user with this student (either directly or through a class room or school)
+    '''
     # was there a direct assignement?
     if Assignments.objects.filter(user=user).count() > 0:
         return True

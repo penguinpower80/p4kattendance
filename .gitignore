@@ -2,3 +2,6 @@
 /staticfiles/admin/
 /venv/
 /.idea/
+.env
+db.sqlite3
+/staticfiles/

@@ -41,7 +41,6 @@ class ll_ATS(unittest.TestCase):
             driver.find_element(By.CSS_SELECTOR, ".is-current-month + div > .date-item").click()
 
         new_value = driver.find_element(By.ID, "meeting_date").get_attribute('value')
-        print(self.meeting_id)
         driver.get("https://p4kids.herokuapp.com/meeting/delete/" + self.meeting_id)
         time.sleep(2)
         if original_value != new_value:

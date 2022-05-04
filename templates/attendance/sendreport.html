@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load attendancetags %}
+{% block title %}Send Report{% endblock %}
+{% block content %}
+    <div class="columns">
+        <div class="column">
+            <h2>Report: {{ report_type|capfirst }}</h2>
+        </div>
+        <div class="column has-text-right">
+            <button type="button" class="button is-secondary" onclick="history.back()">Back</button>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column has-text-centered">
+            {{ title }}
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column has-text-centered">
+            {% attendance_date start %} - {% attendance_date end %}
+        </div>
+    </div>
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="start" value="{{ start|date:"m/d/Y" }}"/>
+        <input type="hidden" name="end" value="{{ end|date:"m/d/Y" }}"/>
+        <input type="hidden" name="entity_type" value="{{ entity_type }}"/>
+        <input type="hidden" name="{{ entity_type }}_id" value="{{ entity_id }}"/>
+        <div class="columns">
+            <div class="column has-text-centered is-6 is-offset-3">
+
+                <div class="field has-addons">
+                    <div class="control is-expanded">
+                        <input class="input" type="email" placeholder="Email" name="email" required>
+                    </div>
+                    <div class="control">
+                        <button class="button is-primary is-outlined" name="sendreport" value="1">
+                <span class="icon is-medium">
+                  <i class="fas fa-paper-plane"></i>
+                </span>
+                            <span>Send</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column has-text-centered">
+
+            </div>
+        </div>
+    </form>
+    {% if report %}
+        <div class="htmlreport">
+            {{ report }}
+        </div>
+    {% endif %}
+{% endblock %}

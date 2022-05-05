@@ -10,7 +10,7 @@ from social_django.models import UserSocialAuth
 @login_required
 def profile(request):
     user = request.user
-
+    message = ''
 
     if request.method == 'POST':
 
@@ -33,7 +33,7 @@ def profile(request):
 
         if len(errors) == 0:
             user.save()
-
+            message = 'Profile saved.'
 
     google_configured = config('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY', default='') != '' and config(
         'SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET', default='') != ''
@@ -76,6 +76,7 @@ def profile(request):
         'google': google_configured,
         'facebook': facebook_configured,
         'twitter': twitter_configured,
+        'message': message,
         'has_social': (google_configured or twitter_configured or facebook_configured)
     })
 

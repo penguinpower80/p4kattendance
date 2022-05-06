@@ -17,11 +17,11 @@ def assignments(request):
         mentors = User.objects.filter(groups__name='Mentors')
     else:
         facilitators = False
-        myMentors = Assignments.objects.filter(type=AssignmentTypes.MENTOR, user=request.user).values_list('tid', flat=True)
-        if myMentors.count() > 0:
-            mentors = User.objects.filter(groups__name='Mentors', id__in=myMentors).all()
+        myMentors = list(Assignments.objects.filter(type=AssignmentTypes.MENTOR, user=request.user).values_list('tid', flat=True))
+        if len(myMentors) > 0:
+            mentors = User.objects.filter(groups__name='Mentors', id__in=myMentors)
         else:
-            mentors = User.objects.filter(groups__name='Mentors')
+            mentors = False
 
     msg = request.GET.get('msg', None)
     return render(request, 'attendance/assignments.html', {

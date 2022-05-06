@@ -13,15 +13,15 @@ TODO: Add some permissions checking!!
 @user_passes_test(lambda u: u.is_superuser or is_facilitator)
 def assignments(request):
     if request.user.is_superuser:
-        facilitators = User.objects.filter(groups__name='Facilitators').all()
-        mentors = User.objects.filter(groups__name='Mentors').all()
+        facilitators = User.objects.filter(groups__name='Facilitators')
+        mentors = User.objects.filter(groups__name='Mentors')
     else:
         facilitators = False
         myMentors = Assignments.objects.filter(type=AssignmentTypes.MENTOR, user=request.user).values_list('tid', flat=True)
         if myMentors.count() > 0:
             mentors = User.objects.filter(groups__name='Mentors', id__in=myMentors).all()
         else:
-            mentors = False
+            mentors = User.objects.filter(groups__name='Mentors')
 
     msg = request.GET.get('msg', None)
     return render(request, 'attendance/assignments.html', {
@@ -64,6 +64,8 @@ def assign(request, userid):
         mySchools = Assignments.objects.filter(type=AssignmentTypes.SCHOOL, user=request.user).values_list('tid', flat=True)
         if mySchools.count() > 0:
             assignable['schools'] = School.objects.filter(id__in=mySchools).all()
+        else:
+            assignable['schools'] = None
 
     return render(request, 'attendance/assign.html', {
         'assignments': assignments,

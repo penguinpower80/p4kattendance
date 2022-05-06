@@ -65,7 +65,7 @@ def assign(request, userid):
         if mySchools.count() > 0:
             assignable['schools'] = School.objects.filter(id__in=mySchools).all()
         else:
-            assignable['schools'] = None
+            assignable['schools'] = School.objects.all()
 
     return render(request, 'attendance/assign.html', {
         'assignments': assignments,

@@ -64,8 +64,6 @@ def assign(request, userid):
         mySchools = Assignments.objects.filter(type=AssignmentTypes.SCHOOL, user=request.user).values_list('tid', flat=True)
         if mySchools.count() > 0:
             assignable['schools'] = School.objects.filter(id__in=mySchools).all()
-        else:
-            assignable['schools'] = School.objects.all()
 
     return render(request, 'attendance/assign.html', {
         'assignments': assignments,

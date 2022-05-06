@@ -184,10 +184,6 @@ def getRedirectWithParam(message, location='attendance:home', kwargs=None):
     url = '{}?msg={}'.format(base_url, message)
     return redirect(url)
 
-
-
-
-
 def userAssignedToStudent(user, student_id):
     '''
     Returns true if there is an entry in assignments linking this user with this student (either directly or through a class room or school)

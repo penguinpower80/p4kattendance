@@ -10,10 +10,16 @@ from attendance.utility import is_facilitator, is_mentor, assignmentsFor, getRed
 '''
 TODO: Add some permissions checking!!
 '''
-@user_passes_test(lambda u: u.is_superuser)
+@user_passes_test(lambda u: u.is_superuser or is_facilitator)
 def assignments(request):
-    mentors = User.objects.filter(groups__name='Mentors')
-    facilitators = User.objects.filter(groups__name='Facilitators')
+    if request.user.is_superuser:
+        facilitators = User.objects.filter(groups__name='Facilitators')
+        mentors = User.objects.filter(groups__name='Mentors')
+    else:
+        facilitators = None
+        myFacilitators = Assignments.objects.filter(type=AssignmentTypes.MENTOR, user=request.user).values_list('tid', flat=True)
+        mentors = User.objects.filter(groups__name='Mentors', id__in=myFacilitators)
+
     msg = request.GET.get('msg', None)
     return render(request, 'attendance/assignments.html', {
         'mentors': mentors,
@@ -24,7 +30,7 @@ def assignments(request):
 '''
 TODO: Add some permissions checking!!
 '''
-@user_passes_test(lambda u: u.is_superuser)
+@user_passes_test(lambda u: u.is_superuser or is_facilitator)
 def assign(request, userid):
     targetuser = get_object_or_404(User, pk=userid)
     if request.method == 'POST':
@@ -43,12 +49,17 @@ def assign(request, userid):
             Assignments(user=targetuser, type=AssignmentTypes.STUDENT, tid=s).save()
 
         return getRedirectWithParam('Assignments Saved', 'attendance:assignments')
-
     assignments = assignmentsFor(targetuser)
     assignable = {}
     if is_facilitator(targetuser):
         assignable['mentors'] = User.objects.filter(groups__name='Mentors')
-    assignable['schools'] = School.objects.all()
+
+    if request.user.is_superuser:
+        assignable['schools'] = School.objects.all()
+    else:
+        mySchools = Assignments.objects.filter(type=AssignmentTypes.SCHOOL, user=request.user).values_list('tid', flat=True)
+        assignable['schools'] = School.objects.filter(id__in=mySchools).all()
+
     return render(request, 'attendance/assign.html', {
         'assignments': assignments,
         'targetuser': targetuser,

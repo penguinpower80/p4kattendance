@@ -16,12 +16,12 @@ def assignments(request):
         facilitators = User.objects.filter(groups__name='Facilitators')
         mentors = User.objects.filter(groups__name='Mentors')
     else:
-        facilitators = None
-        myFacilitators = Assignments.objects.filter(type=AssignmentTypes.MENTOR, user=request.user).values_list('tid', flat=True)
-        if myFacilitators.count() > 0:
-            mentors = User.objects.filter(groups__name='Mentors', id__in=myFacilitators)
+        facilitators = False
+        myMentors = Assignments.objects.filter(type=AssignmentTypes.MENTOR, user=request.user).values_list('tid', flat=True)
+        if myMentors.count() > 0:
+            mentors = User.objects.filter(groups__name='Mentors', id__in=myMentors)
         else:
-            mentors = None
+            mentors = False
 
     msg = request.GET.get('msg', None)
     return render(request, 'attendance/assignments.html', {
@@ -54,6 +54,7 @@ def assign(request, userid):
         return getRedirectWithParam('Assignments Saved', 'attendance:assignments')
     assignments = assignmentsFor(targetuser)
     assignable = {}
+
     if is_facilitator(targetuser):
         assignable['mentors'] = User.objects.filter(groups__name='Mentors')
 

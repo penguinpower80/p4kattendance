@@ -3,10 +3,10 @@
 {% block content %}
 <h2>Assignments</h2>
         <div class="columns">
-        {% if facilitators %}
+        {% if facilitators.all %}
         {% include 'partials/assignment/personlist.html' with title="Facilitators" user_list=facilitators only %}
         {% endif %}
-        {% if mentors %}
+        {% if mentors.all %}
         {% include 'partials/assignment/personlist.html' with title="Mentors" user_list=mentors only %}
         {% endif %}
         </div>

@@ -18,7 +18,10 @@ def assignments(request):
     else:
         facilitators = None
         myFacilitators = Assignments.objects.filter(type=AssignmentTypes.MENTOR, user=request.user).values_list('tid', flat=True)
-        mentors = User.objects.filter(groups__name='Mentors', id__in=myFacilitators)
+        if myFacilitators.count() > 0:
+            mentors = User.objects.filter(groups__name='Mentors', id__in=myFacilitators)
+        else:
+            mentors = None
 
     msg = request.GET.get('msg', None)
     return render(request, 'attendance/assignments.html', {
@@ -58,7 +61,10 @@ def assign(request, userid):
         assignable['schools'] = School.objects.all()
     else:
         mySchools = Assignments.objects.filter(type=AssignmentTypes.SCHOOL, user=request.user).values_list('tid', flat=True)
-        assignable['schools'] = School.objects.filter(id__in=mySchools).all()
+        if mySchools.count() > 0:
+            assignable['schools'] = School.objects.filter(id__in=mySchools).all()
+        else:
+            assignable['schools'] = None
 
     return render(request, 'attendance/assign.html', {
         'assignments': assignments,
